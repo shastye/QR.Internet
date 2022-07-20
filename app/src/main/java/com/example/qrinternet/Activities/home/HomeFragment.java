@@ -1,4 +1,4 @@
-package com.example.qrinternet.ui.home;
+package com.example.qrinternet.Activities.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +26,7 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

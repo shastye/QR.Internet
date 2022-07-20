@@ -1,4 +1,4 @@
-package com.example.qrinternet.ui.notifications;
+package com.example.qrinternet.Activities.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
