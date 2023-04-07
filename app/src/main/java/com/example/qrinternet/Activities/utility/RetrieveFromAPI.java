@@ -72,7 +72,7 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
                     .url("https://qrcode3.p.rapidapi.com/qrcode/wifi")
                     .post(body)
                     .addHeader("content-type", "application/json")
-                    .addHeader("X-RapidAPI-Key", "2da622fcb4mshc3c9c748526f0c4p1db57bjsna162a8b9db0b")
+                    .addHeader("X-RapidAPI-Key", Tags.API_KEY)
                     .addHeader("X-RapidAPI-Host", "qrcode3.p.rapidapi.com")
                     .build();
             Response response = client.newCall(request).execute();

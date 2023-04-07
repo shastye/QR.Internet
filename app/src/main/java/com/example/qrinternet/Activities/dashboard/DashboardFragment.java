@@ -42,6 +42,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
+
                 RetrieveFromAPI temp = new RetrieveFromAPI();
                 temp.execute();
                 try {
@@ -56,7 +57,12 @@ public class DashboardFragment extends Fragment {
 
                 ImageView image = root.findViewById(R.id.ViewQRCode_imageView);
                 image.setImageBitmap(bitmap);
+
+
             }
+
+
+
         });
 
 
