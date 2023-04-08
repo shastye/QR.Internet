@@ -40,6 +40,7 @@ public class DashboardFragment extends Fragment {
         final TextView textView = binding.textDashboard;
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+
         // ADDITIONS ADDED BETWEEN COMMENTS
 
 
@@ -70,29 +71,43 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                RetrieveFromAPI temp = new RetrieveFromAPI();
-                temp.execute();
-                try {
-                    temp.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                String ssid = ssid_et.getText().toString();
+                String password = pw_et.getText().toString();
+                String security = sec_s.getSelectedItem().toString();
+                if (security.equals("None")) {
+                    security = "nopass";
                 }
+                String hidden = "false";
+                if (hid_cb.isChecked()) {
+                    hidden = "true";
+                }
+                String finalHidden = hidden;
 
-                Bitmap bitmap = temp.getBitmap();
+                if ((!ssid.equals("") && !password.equals("")) || (!ssid.equals("") && security.equals("nopass"))) {
+                    RetrieveFromAPI temp = new RetrieveFromAPI(ssid, password, security, finalHidden);
+                    temp.execute();
+                    try {
+                        temp.get();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                qrCode.setVisibility(View.VISIBLE);
-                ssid_tv.setVisibility(View.INVISIBLE);
-                ssid_et.setVisibility(View.INVISIBLE);
-                pw_tv.setVisibility(View.INVISIBLE);
-                pw_et.setVisibility(View.INVISIBLE);
-                sec_tv.setVisibility(View.INVISIBLE);
-                sec_s.setVisibility(View.INVISIBLE);
-                hid_tv.setVisibility(View.INVISIBLE);
-                hid_cb.setVisibility(View.INVISIBLE);
+                    Bitmap bitmap = temp.getBitmap();
 
-                qrCode.setImageBitmap(bitmap);
+                    qrCode.setVisibility(View.VISIBLE);
+                    ssid_tv.setVisibility(View.INVISIBLE);
+                    ssid_et.setVisibility(View.INVISIBLE);
+                    pw_tv.setVisibility(View.INVISIBLE);
+                    pw_et.setVisibility(View.INVISIBLE);
+                    sec_tv.setVisibility(View.INVISIBLE);
+                    sec_s.setVisibility(View.INVISIBLE);
+                    hid_tv.setVisibility(View.INVISIBLE);
+                    hid_cb.setVisibility(View.INVISIBLE);
+
+                    qrCode.setImageBitmap(bitmap);
+                }
 
             }
 
