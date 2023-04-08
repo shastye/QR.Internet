@@ -27,6 +27,20 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
 
     private Exception exception;
     private Bitmap bitmap;
+    private String ssid, password, security, hidden;
+
+    public RetrieveFromAPI() {
+        ssid = "\"My WiFi network name\"";
+        password = "\"Pass!&#^@#*@\"";
+        security = "\"WPA\"";
+        hidden = "false";
+    }
+    public RetrieveFromAPI(String _ssid, String _password, String _security, String _hidden) {
+        ssid = "\"" + _ssid + "\"";
+        password = "\"" + _password + "\"";
+        security = "\"" + _security + "\"";
+        hidden = _hidden;
+    }
 
     protected Long doInBackground(String... urls) {
         try {
@@ -35,10 +49,10 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
             MediaType mediaType = MediaType.parse("application/json");
             String value = "\r\n{" +
             "\r\n    \"data\": {" +
-            "\r\n        \"ssid\": \"My WiFi network name\"," +
-            "\r\n        \"password\": \"Pass!&#^@#*@\"," +
-            "\r\n        \"security\": \"WPA\"," +
-            "\r\n        \"hidden\": false" +
+            "\r\n        \"ssid\": " + ssid + "," +
+            "\r\n        \"password\": " + password + "," +
+            "\r\n        \"security\": " + security + "," +
+            "\r\n        \"hidden\": " + hidden +
             "\r\n    }," +
             "\r\n    \"image\": {" +
             "\r\n        \"uri\": \"icon://appstore\"," +
