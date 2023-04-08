@@ -1,15 +1,21 @@
 package com.example.qrinternet.Activities.dashboard;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,13 +42,34 @@ public class DashboardFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
+
+        ImageView qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
         Button button = (Button) root.findViewById(R.id.CreateQRCode_button);
+
+        TextView ssid_tv = (TextView) root.findViewById(R.id.ssid_textView);
+        EditText ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
+        TextView pw_tv = (TextView) root.findViewById(R.id.password_textView);
+        EditText pw_et = (EditText) root.findViewById(R.id.password_editText);
+        TextView sec_tv = (TextView) root.findViewById(R.id.security_textView);
+        Spinner sec_s = (Spinner) root.findViewById(R.id.security_spinner);
+        TextView hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
+        CheckBox hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
+
+        qrCode.setVisibility(View.INVISIBLE);
+        ssid_tv.setVisibility(View.VISIBLE);
+        ssid_et.setVisibility(View.VISIBLE);
+        pw_tv.setVisibility(View.VISIBLE);
+        pw_et.setVisibility(View.VISIBLE);
+        sec_tv.setVisibility(View.VISIBLE);
+        sec_s.setVisibility(View.VISIBLE);
+        hid_tv.setVisibility(View.VISIBLE);
+        hid_cb.setVisibility(View.VISIBLE);
+
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
                 RetrieveFromAPI temp = new RetrieveFromAPI();
                 temp.execute();
                 try {
@@ -55,9 +82,17 @@ public class DashboardFragment extends Fragment {
 
                 Bitmap bitmap = temp.getBitmap();
 
-                ImageView image = root.findViewById(R.id.ViewQRCode_imageView);
-                image.setImageBitmap(bitmap);
+                qrCode.setVisibility(View.VISIBLE);
+                ssid_tv.setVisibility(View.INVISIBLE);
+                ssid_et.setVisibility(View.INVISIBLE);
+                pw_tv.setVisibility(View.INVISIBLE);
+                pw_et.setVisibility(View.INVISIBLE);
+                sec_tv.setVisibility(View.INVISIBLE);
+                sec_s.setVisibility(View.INVISIBLE);
+                hid_tv.setVisibility(View.INVISIBLE);
+                hid_cb.setVisibility(View.INVISIBLE);
 
+                qrCode.setImageBitmap(bitmap);
 
             }
 
