@@ -152,6 +152,33 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toEndOf="@+id/hidden_textView" />
 
+    <TextView
+        android:id="@+id/filename_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text=" File Name: "
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintBottom_toTopOf="@+id/CreateQRCode_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ViewQRCode_imageView" />
+
+    <EditText
+        android:id="@+id/filename_editText"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginTop="124dp"
+        android:hint="file_name.png"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/CreateQRCode_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/filename_textView"
+        app:layout_constraintTop_toBottomOf="@+id/ViewQRCode_imageView" />
+
     <Button
         android:id="@+id/SaveQRCode_button"
         android:layout_width="175dp"

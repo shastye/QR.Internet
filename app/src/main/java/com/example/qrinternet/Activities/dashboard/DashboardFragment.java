@@ -55,6 +55,8 @@ public class DashboardFragment extends Fragment {
         Spinner sec_s = (Spinner) root.findViewById(R.id.security_spinner);
         TextView hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
         CheckBox hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
+        TextView fn_tv = (TextView) root.findViewById(R.id.filename_textView);
+        EditText fn_et = (EditText) root.findViewById(R.id.filename_editText);
 
         qrCode.setVisibility(View.INVISIBLE);
         ssid_tv.setVisibility(View.VISIBLE);
@@ -65,6 +67,8 @@ public class DashboardFragment extends Fragment {
         sec_s.setVisibility(View.VISIBLE);
         hid_tv.setVisibility(View.VISIBLE);
         hid_cb.setVisibility(View.VISIBLE);
+        fn_tv.setVisibility(View.INVISIBLE);
+        fn_et.setVisibility(View.INVISIBLE);
         createQRbutton.setVisibility(View.VISIBLE);
         saveQRbutton.setVisibility(View.INVISIBLE);
 
@@ -110,6 +114,8 @@ public class DashboardFragment extends Fragment {
                         sec_s.setVisibility(View.INVISIBLE);
                         hid_tv.setVisibility(View.INVISIBLE);
                         hid_cb.setVisibility(View.INVISIBLE);
+                        fn_tv.setVisibility(View.VISIBLE);
+                        fn_et.setVisibility(View.VISIBLE);
                         createQRbutton.setVisibility(View.INVISIBLE);
                         saveQRbutton.setVisibility(View.VISIBLE);
                     }
