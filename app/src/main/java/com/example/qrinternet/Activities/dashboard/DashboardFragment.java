@@ -1,6 +1,5 @@
 package com.example.qrinternet.Activities.dashboard;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,19 +7,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.qrinternet.Activities.utility.RetrieveFromAPI;
+import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
 
@@ -47,7 +44,8 @@ public class DashboardFragment extends Fragment {
 
 
         ImageView qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
-        Button button = (Button) root.findViewById(R.id.CreateQRCode_button);
+        Button createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
+        Button saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
         TextView ssid_tv = (TextView) root.findViewById(R.id.ssid_textView);
         EditText ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
@@ -67,8 +65,10 @@ public class DashboardFragment extends Fragment {
         sec_s.setVisibility(View.VISIBLE);
         hid_tv.setVisibility(View.VISIBLE);
         hid_cb.setVisibility(View.VISIBLE);
+        createQRbutton.setVisibility(View.VISIBLE);
+        saveQRbutton.setVisibility(View.INVISIBLE);
 
-        button.setOnClickListener(new View.OnClickListener()
+        createQRbutton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -87,7 +87,7 @@ public class DashboardFragment extends Fragment {
                 String finalHidden = hidden;
 
                 if ((!ssid.equals("") && !password.equals("")) || (!ssid.equals("") && security.equals("nopass"))) {
-                    RetrieveFromAPI temp = new RetrieveFromAPI(ssid, password, security, finalHidden);
+                    GetQRCodeFromAPI temp = new GetQRCodeFromAPI(ssid, password, security, finalHidden);
                     temp.execute();
                     try {
                         temp.get();
@@ -110,7 +110,8 @@ public class DashboardFragment extends Fragment {
                         sec_s.setVisibility(View.INVISIBLE);
                         hid_tv.setVisibility(View.INVISIBLE);
                         hid_cb.setVisibility(View.INVISIBLE);
-                        button.setVisibility(View.INVISIBLE);
+                        createQRbutton.setVisibility(View.INVISIBLE);
+                        saveQRbutton.setVisibility(View.VISIBLE);
                     }
                     else {
                         DialogFragment errorDialog = new ErrorCodeDialogFragment(temp.getResponseCode(), temp.getResponseDetails());
@@ -119,6 +120,14 @@ public class DashboardFragment extends Fragment {
                 }
 
             }
+        });
+
+        saveQRbutton.setOnClickListener(new View.OnClickListener()
+        {
+              @Override
+              public void onClick(View v) {
+
+              }
         });
 
 

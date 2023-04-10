@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
+    private InputStream binaryData;
     private Bitmap bitmap;
     private int responseCode;
     private JSONObject responseDetails;
@@ -105,10 +106,10 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
 
             // Create and save QR Code as png
             if (responseCode == 200) {
-                InputStream inputStream = response.body().byteStream();
+                binaryData = response.body().byteStream();
                 String path = Tags.IMAGE_PATH;
-                File file = new File(path, Tags.IMAGE_NAME);
-                bitmap = BitmapFactory.decodeStream(inputStream);
+                File file = new File(Tags.IMAGE_PATH, Tags.IMAGE_NAME);
+                bitmap = BitmapFactory.decodeStream(binaryData);
                 try (FileOutputStream outputStream = new FileOutputStream(file)) {
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 } catch (IOException e) {
@@ -147,5 +148,8 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     }
     public JSONObject getResponseDetails() {
         return responseDetails;
+    }
+    public InputStream getBinaryData() {
+        return binaryData;
     }
 }
