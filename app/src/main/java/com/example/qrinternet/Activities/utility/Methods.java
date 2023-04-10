@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class Methods {
     public Boolean SaveBitmapAsPNGToDevice(Bitmap _bitmap) {
-        File file = new File(Tags.IMAGE_PATH, Tags.IMAGE_NAME);
+        File file = new File(Tags.IMAGE_PATH, Tags.IMAGE_NAME + Tags.IMAGE_EXT);
         try (FileOutputStream outputStream = new FileOutputStream(file)) {
             _bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             return true;
