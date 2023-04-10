@@ -18,15 +18,20 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
 
     private Exception exception;
     private Bitmap bitmap;
+    private int responseCode;
+    private JSONObject responseDetails;
     private String ssid, password, security, hidden;
 
     public RetrieveFromAPI() {
@@ -91,49 +96,33 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
                     .build();
             Response response = client.newCall(request).execute();
 
+            // Error Checking
+            responseCode = response.code();
+            if (responseCode != 200) {
+                String json = response.body().string();
+                try {
+                    responseDetails = new JSONObject(json);
+                    Log.e("JSON", responseDetails.toString());
+                } catch (Throwable t) {
+                    Log.e("JSONObject", "Could not parse JSON");
+                }
+
+                Log.e("Response Code", String.valueOf(responseCode));
+                Log.e("Response Body string", json);
+            }
+
+
             // Create and save QR Code as png
-            InputStream inputStream = response.body().byteStream();
-            String path = Tags.IMAGE_PATH;
-            File file = new File(path, Tags.IMAGE_NAME);
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // Logs for Debugging
-            if (request != null) {
-                Log.e("SUCCESS 1", "request built.");
-                Log.e("request body", request.toString());
-                Log.e("request header", request.headers().toString());
-            } else {
-                Log.e("ERROR 1", "request not built.");
-            }
-
-            if (response.isSuccessful()) {
-                Log.e("SUCCESS 2", "response built.");
-
-                try {
-                    Log.e("response body", response.message().toString());
-                } catch (NullPointerException e) {
-                    Log.e("response body", "body is {NULL}");
+            if (responseCode == 200) {
+                InputStream inputStream = response.body().byteStream();
+                String path = Tags.IMAGE_PATH;
+                File file = new File(path, Tags.IMAGE_NAME);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                try {
-                    Log.e("response header", response.headers().toString());
-                } catch (NullPointerException e) {
-                    Log.e("response header", "header is {NULL}");
-                }
-            } else {
-                Log.e("ERROR 2", "response not built.");
-            }
-
-            if (file.isFile()) {
-                Log.e("SUCCESS 3", "image created");
-                Log.e("File", file.getPath());
-            } else {
-                Log.e("ERROR 3", "image NOT created");
             }
 
             return 0L;
@@ -153,5 +142,11 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
 
     public Bitmap getBitmap() {
         return bitmap;
+    }
+    public int getResponseCode() {
+        return responseCode;
+    }
+    public JSONObject getResponseDetails() {
+        return responseDetails;
     }
 }

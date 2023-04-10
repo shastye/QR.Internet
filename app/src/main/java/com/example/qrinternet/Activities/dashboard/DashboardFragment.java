@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,6 +24,7 @@ import com.example.qrinternet.Activities.utility.RetrieveFromAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class DashboardFragment extends Fragment {
@@ -76,6 +78,7 @@ public class DashboardFragment extends Fragment {
                 String security = sec_s.getSelectedItem().toString();
                 if (security.equals("None")) {
                     security = "nopass";
+                    password = "";
                 }
                 String hidden = "false";
                 if (hid_cb.isChecked()) {
@@ -94,25 +97,28 @@ public class DashboardFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    Bitmap bitmap = temp.getBitmap();
+                    if (temp.getResponseCode() == 200) {
+                        Bitmap bitmap = temp.getBitmap();
+                        qrCode.setImageBitmap(bitmap);
 
-                    qrCode.setVisibility(View.VISIBLE);
-                    ssid_tv.setVisibility(View.INVISIBLE);
-                    ssid_et.setVisibility(View.INVISIBLE);
-                    pw_tv.setVisibility(View.INVISIBLE);
-                    pw_et.setVisibility(View.INVISIBLE);
-                    sec_tv.setVisibility(View.INVISIBLE);
-                    sec_s.setVisibility(View.INVISIBLE);
-                    hid_tv.setVisibility(View.INVISIBLE);
-                    hid_cb.setVisibility(View.INVISIBLE);
-
-                    qrCode.setImageBitmap(bitmap);
+                        qrCode.setVisibility(View.VISIBLE);
+                        ssid_tv.setVisibility(View.INVISIBLE);
+                        ssid_et.setVisibility(View.INVISIBLE);
+                        pw_tv.setVisibility(View.INVISIBLE);
+                        pw_et.setVisibility(View.INVISIBLE);
+                        sec_tv.setVisibility(View.INVISIBLE);
+                        sec_s.setVisibility(View.INVISIBLE);
+                        hid_tv.setVisibility(View.INVISIBLE);
+                        hid_cb.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        DialogFragment errorDialog = new ErrorCodeDialogFragment(temp.getResponseCode(), temp.getResponseDetails());
+                        errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                    }
                 }
 
             }
-
-
-
         });
 
 
