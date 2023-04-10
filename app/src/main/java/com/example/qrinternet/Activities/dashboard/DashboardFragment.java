@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
+import com.example.qrinternet.Activities.utility.Tags;
+import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
 
@@ -27,6 +29,9 @@ import java.util.concurrent.ExecutionException;
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+
+    GetQRCodeFromAPI getQRcode;
+    UploadQRCodesToAPI uploadQRcode;
 
     ImageView qrCode;
     Button createQRbutton;
@@ -96,24 +101,22 @@ public class DashboardFragment extends Fragment {
                 String finalHidden = hidden;
 
                 if ((!ssid.equals("") && !password.equals("")) || (!ssid.equals("") && security.equals("nopass"))) {
-                    GetQRCodeFromAPI temp = new GetQRCodeFromAPI(ssid, password, security, finalHidden);
-                    temp.execute();
+                    getQRcode = new GetQRCodeFromAPI(ssid, password, security, finalHidden);
+                    getQRcode.execute();
                     try {
-                        temp.get();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
+                        getQRcode.get();
+                    } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    if (temp.getResponseCode() == 200) {
-                        Bitmap bitmap = temp.getBitmap();
+                    if (getQRcode.getResponseCode() == 200) {
+                        Bitmap bitmap = getQRcode.getBitmap();
                         qrCode.setImageBitmap(bitmap);
 
                         showScreen2();
                     }
                     else {
-                        DialogFragment errorDialog = new ErrorCodeDialogFragment(temp.getResponseCode(), temp.getResponseDetails());
+                        DialogFragment errorDialog = new ErrorCodeDialogFragment(getQRcode.getResponseCode(), getQRcode.getResponseDetails());
                         errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
                 }
