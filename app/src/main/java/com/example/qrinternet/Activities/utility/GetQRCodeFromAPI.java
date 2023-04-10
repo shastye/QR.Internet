@@ -3,44 +3,35 @@ package com.example.qrinternet.Activities.utility;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
 
-import androidx.fragment.app.Fragment;
-
-import com.example.qrinternet.Activities.dashboard.DashboardFragment;
-import com.example.qrinternet.R;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 
-public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
-
-    private Exception exception;
+public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     private Bitmap bitmap;
     private int responseCode;
     private JSONObject responseDetails;
     private String ssid, password, security, hidden;
 
-    public RetrieveFromAPI() {
+    public GetQRCodeFromAPI() {
         ssid = "\"My WiFi network name\"";
         password = "\"Pass!&#^@#*@\"";
         security = "\"WPA\"";
         hidden = "false";
     }
-    public RetrieveFromAPI(String _ssid, String _password, String _security, String _hidden) {
+    public GetQRCodeFromAPI(String _ssid, String _password, String _security, String _hidden) {
         ssid = "\"" + _ssid + "\"";
         password = "\"" + _password + "\"";
         security = "\"" + _security + "\"";
@@ -127,7 +118,15 @@ public class RetrieveFromAPI extends AsyncTask<String, Void, Long> {
 
             return 0L;
         } catch (Exception e) {
-            this.exception = e;
+            responseCode = 0;
+
+            String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
+            try {
+                responseDetails = new JSONObject(json);
+                Log.e("JSON", responseDetails.toString());
+            } catch (Throwable t) {
+                Log.e("JSONObject", "Could not parse JSON");
+            }
 
             return null;
         }

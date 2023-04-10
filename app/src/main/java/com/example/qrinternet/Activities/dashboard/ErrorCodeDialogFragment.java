@@ -53,8 +53,15 @@ public class ErrorCodeDialogFragment extends DialogFragment {
         message = message +
                 "Please try again. If error persists contact " +
                 "customer support with the following information:\n" +
-                "    Error Code: " + code + "\n" +
-                "    Error Detail: " + details.toString();
+                "    Error Code: " + code + "\n";
+
+        if (code == 0) {
+            message = message + "    Error Detail: Exception occurred during GetQRCodeFromAPI with message: " +
+                    details.toString();
+        }
+        else {
+            message = message + "    Error Detail: " + details.toString();
+        }
 
         builder.setMessage(message);
 
