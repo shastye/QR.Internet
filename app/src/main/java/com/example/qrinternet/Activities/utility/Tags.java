@@ -5,5 +5,6 @@ public class Tags {
 
 
     public static String IMAGE_PATH = "/storage/self/primary/Pictures";
-    public static String IMAGE_NAME = "qrcode.png";
+    public static String IMAGE_NAME = "qrcode";
+    public static String IMAGE_EXT = ".png";
 }
