@@ -104,17 +104,10 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
             }
 
 
-            // Create and save QR Code as png
+            // Create QR Code as bitmap
             if (responseCode == 200) {
                 binaryData = response.body().byteStream();
-                String path = Tags.IMAGE_PATH;
-                File file = new File(Tags.IMAGE_PATH, Tags.IMAGE_NAME);
                 bitmap = BitmapFactory.decodeStream(binaryData);
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
 
             return 0L;
