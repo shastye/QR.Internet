@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
+import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
@@ -134,7 +135,44 @@ public class DashboardFragment extends Fragment {
         {
               @Override
               public void onClick(View v) {
+                  Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
 
+                  String filename = fn_et.getText().toString();
+                  filename = filename.trim();
+                  if (filename.equals("")) {
+                      filename = "qrcode_" + Tags.NUM_SAVED_QRCODES + ".png";
+                  }
+                  else if (!filename.endsWith(".png")) {
+                      int index = filename.indexOf('.');
+                      if (index == -1) {
+                          index = filename.length();
+                      }
+                      filename = filename.subSequence(0, index).toString();
+                      filename = filename + ".png";
+                  }
+
+                  boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, getQRcode.getBitmap());
+                  if (saved) {
+                      uploadQRcode = new UploadQRCodesToAPI(filename, getQRcode.getBinaryData());
+                      uploadQRcode.execute();
+                      try {
+                          uploadQRcode.get();
+                      } catch (ExecutionException | InterruptedException e) {
+                          e.printStackTrace();
+                      }
+
+                      if (uploadQRcode.getResponseCode() == 200) {
+                          DialogFragment savedImage = new ImageSavedDialogFragment();
+                          savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+
+                          showScreen1();
+                      } else {
+                          Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+
+                          DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getResponseDetails());
+                          errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                      }
+                  }
               }
         });
 

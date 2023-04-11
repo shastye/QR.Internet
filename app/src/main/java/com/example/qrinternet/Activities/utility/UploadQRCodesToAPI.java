@@ -4,51 +4,48 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.InputStream;
 
+import okhttp3.MultipartBody;
+
 public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
-    private InputStream data;
+    private String filename;
+    private byte[] data;
+
     private int responseCode;
     private JSONObject responseDetails;
 
-    public UploadQRCodesToAPI(InputStream _binaryData) {
+    public UploadQRCodesToAPI(String _filename, byte[] _binaryData) {
+        filename = _filename;
         data = _binaryData;
     }
 
     @Override
     protected Long doInBackground(String... strings) {
         try {
+            File fileInput = new File(Tags.SAVE_PATH, filename);
             OkHttpClient client = new OkHttpClient();
 
-            MediaType mediaType = MediaType.parse(
-                    "multipart/form-data; " +
-                          "boundary=---011000010111000001101001"
-            );
-            RequestBody body = RequestBody.create(
-                    mediaType,
-                    "-----011000010111000001101001\r\n" +
-                            "Content-Disposition: form-data; " +
-                            "name=\"image\"\r\n\r\n" +
-                            "\"YOUR_FILE_CONTENT\"\r\n" +
-                            "-----011000010111000001101001--\r\n");
+            RequestBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("image", Tags.SAVE_PATH + filename,
+                            RequestBody.create(fileInput, MediaType.parse("image/png")))
+                    .build();
+
             Request request = new Request.Builder()
                     .url("https://qrcode3.p.rapidapi.com/images")
                     .post(body)
-                    .addHeader("Accept", "application/json")
-                    .addHeader(
-                            "Content-Type",
-                            "multipart/form-data; " +
-                                  "boundary=---011000010111000001101001"
-                    )
                     .addHeader("X-RapidAPI-Key", Tags.API_KEY)
+                    .addHeader("X-RapidAPI-Host", "qrcode3.p.rapidapi.com")
                     .build();
 
             Response response = client.newCall(request).execute();
@@ -82,5 +79,18 @@ public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
 
             return null;
         }
+    }
+
+    protected void onPostExecute(Long feed) {
+        super.onPostExecute(feed);
+
+        // TODO: check this.exception
+        // TODO: do something with the feed
+    }
+    public int getResponseCode() {
+        return responseCode;
+    }
+    public JSONObject getResponseDetails() {
+        return responseDetails;
     }
 }

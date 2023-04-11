@@ -3,6 +3,7 @@ package com.example.qrinternet.Activities.utility;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 
 import com.squareup.okhttp.MediaType;
@@ -14,13 +15,17 @@ import com.squareup.okhttp.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
-    private InputStream binaryData;
+    private byte[] binaryData;
     private Bitmap bitmap;
     private int responseCode;
     private JSONObject responseDetails;
@@ -106,8 +111,9 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
 
             // Create QR Code as bitmap
             if (responseCode == 200) {
-                binaryData = response.body().byteStream();
-                bitmap = BitmapFactory.decodeStream(binaryData);
+                binaryData = response.body().bytes();
+                InputStream inputStream = new ByteArrayInputStream(binaryData);
+                bitmap = BitmapFactory.decodeStream(inputStream);
             }
 
             return 0L;
@@ -142,7 +148,7 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     public JSONObject getResponseDetails() {
         return responseDetails;
     }
-    public InputStream getBinaryData() {
+    public byte[] getBinaryData() {
         return binaryData;
     }
 }

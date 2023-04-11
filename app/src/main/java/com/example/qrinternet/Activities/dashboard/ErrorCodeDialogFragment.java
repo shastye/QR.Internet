@@ -56,7 +56,7 @@ public class ErrorCodeDialogFragment extends DialogFragment {
                 "    Error Code: " + code + "\n";
 
         if (code == 0) {
-            message = message + "    Error Detail: Exception occurred during GetQRCodeFromAPI with message: " +
+            message = message + "    Error Detail: Exception occurred during process with message: " +
                     details.toString();
         }
         else {
