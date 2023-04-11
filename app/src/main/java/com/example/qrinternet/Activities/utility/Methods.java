@@ -12,6 +12,8 @@ public class Methods {
         File file = new File(Tags.SAVE_PATH, _filename);
         try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
             _bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+            outputStream.close();
             return true;
         } catch (Exception e) {
             Log.e("Couldn't open file", e.getMessage());

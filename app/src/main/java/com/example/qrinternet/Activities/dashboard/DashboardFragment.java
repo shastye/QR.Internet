@@ -76,10 +76,7 @@ public class DashboardFragment extends Fragment {
         sec_s = (Spinner) root.findViewById(R.id.security_spinner);
         hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
         hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
-        fn_tv = (TextView) root.findViewById(R.id.filename_textView);
-        fn_et = (EditText) root.findViewById(R.id.filename_editText);
         createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
-        saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
         showScreen1();
 
@@ -130,6 +127,9 @@ public class DashboardFragment extends Fragment {
         //  Saving QR Code  //
         //////////////////////
 
+        fn_tv = (TextView) root.findViewById(R.id.filename_textView);
+        fn_et = (EditText) root.findViewById(R.id.filename_editText);
+        saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
         saveQRbutton.setOnClickListener(new View.OnClickListener()
         {
