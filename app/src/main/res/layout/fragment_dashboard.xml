@@ -21,17 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/CreateQRCode_button"
-        android:layout_width="175dp"
-        android:layout_height="wrap_content"
-        android:text="Create QR Code"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
-        tools:ignore="HardcodedText" />
-
     <ImageView
         android:id="@+id/ViewQRCode_imageView"
         android:layout_width="170dp"
@@ -152,6 +141,17 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toEndOf="@+id/hidden_textView" />
 
+    <Button
+        android:id="@+id/CreateQRCode_button"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:text="Create QR Code"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
+        tools:ignore="HardcodedText" />
+
     <TextView
         android:id="@+id/filename_textView"
         android:layout_width="wrap_content"
@@ -187,5 +187,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_dashboard" />
+        app:layout_constraintTop_toBottomOf="@+id/ViewQRCode_imageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
