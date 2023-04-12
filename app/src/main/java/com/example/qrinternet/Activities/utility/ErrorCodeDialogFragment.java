@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.dashboard;
+package com.example.qrinternet.Activities.utility;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

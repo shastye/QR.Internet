@@ -17,13 +17,14 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
+import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
 import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
-import com.google.android.material.navigation.NavigationBarMenu;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -34,9 +35,6 @@ public class DashboardFragment extends Fragment {
 
     GetQRCodeFromAPI getQRcode;
     UploadQRCodesToAPI uploadQRcode;
-
-    String cqc_title = "Create QR Code";
-    String vsqc_title = "View/Save QR Code";
 
     ImageView qrCode;
     Button createQRbutton;
