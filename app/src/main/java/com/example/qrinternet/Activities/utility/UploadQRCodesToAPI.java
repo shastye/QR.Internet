@@ -1,6 +1,5 @@
 package com.example.qrinternet.Activities.utility;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,7 +12,6 @@ import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.InputStream;
 
 import okhttp3.MultipartBody;
 
@@ -22,7 +20,7 @@ public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
     private byte[] data;
 
     private int responseCode;
-    private JSONObject responseDetails;
+    private JSONObject errorDetails;
 
     public UploadQRCodesToAPI(String _filename, byte[] _binaryData) {
         filename = _filename;
@@ -55,8 +53,8 @@ public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
             if (responseCode != 200) {
                 String json = response.body().string();
                 try {
-                    responseDetails = new JSONObject(json);
-                    Log.e("JSON", responseDetails.toString());
+                    errorDetails = new JSONObject(json);
+                    Log.e("JSON", errorDetails.toString());
                 } catch (Throwable t) {
                     Log.e("JSONObject", "Could not parse JSON");
                 }
@@ -71,8 +69,8 @@ public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
 
             String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
             try {
-                responseDetails = new JSONObject(json);
-                Log.e("JSON", responseDetails.toString());
+                errorDetails = new JSONObject(json);
+                Log.e("JSON", errorDetails.toString());
             } catch (Throwable t) {
                 Log.e("JSONObject", "Could not parse JSON");
             }
@@ -90,7 +88,7 @@ public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
     public int getResponseCode() {
         return responseCode;
     }
-    public JSONObject getResponseDetails() {
-        return responseDetails;
+    public JSONObject getErrorDetails() {
+        return errorDetails;
     }
 }

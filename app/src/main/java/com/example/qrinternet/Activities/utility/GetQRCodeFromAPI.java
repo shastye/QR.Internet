@@ -3,7 +3,6 @@ package com.example.qrinternet.Activities.utility;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 
 import com.squareup.okhttp.MediaType;
@@ -12,23 +11,16 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     private byte[] binaryData;
     private Bitmap bitmap;
     private int responseCode;
-    private JSONObject responseDetails;
+    private JSONObject errorDetails;
     private String ssid, password, security, hidden;
 
     public GetQRCodeFromAPI() {
@@ -98,8 +90,8 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
             if (responseCode != 200) {
                 String json = response.body().string();
                 try {
-                    responseDetails = new JSONObject(json);
-                    Log.e("JSON", responseDetails.toString());
+                    errorDetails = new JSONObject(json);
+                    Log.e("JSON", errorDetails.toString());
                 } catch (Throwable t) {
                     Log.e("JSONObject", "Could not parse JSON");
                 }
@@ -122,8 +114,8 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
 
             String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
             try {
-                responseDetails = new JSONObject(json);
-                Log.e("JSON", responseDetails.toString());
+                errorDetails = new JSONObject(json);
+                Log.e("JSON", errorDetails.toString());
             } catch (Throwable t) {
                 Log.e("JSONObject", "Could not parse JSON");
             }
@@ -145,8 +137,8 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     public int getResponseCode() {
         return responseCode;
     }
-    public JSONObject getResponseDetails() {
-        return responseDetails;
+    public JSONObject getErrorDetails() {
+        return errorDetails;
     }
     public byte[] getBinaryData() {
         return binaryData;

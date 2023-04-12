@@ -118,7 +118,7 @@ public class DashboardFragment extends Fragment {
                         showScreen2();
                     }
                     else {
-                        DialogFragment errorDialog = new ErrorCodeDialogFragment(getQRcode.getResponseCode(), getQRcode.getResponseDetails());
+                        DialogFragment errorDialog = new ErrorCodeDialogFragment(getQRcode.getResponseCode(), getQRcode.getErrorDetails());
                         errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
                 }
@@ -169,7 +169,7 @@ public class DashboardFragment extends Fragment {
                       } else {
                           Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 
-                          DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getResponseDetails());
+                          DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
                           errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                       }
                   }
