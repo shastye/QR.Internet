@@ -7,14 +7,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.utility.ImageFromAPI;
+import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
 import com.example.qrinternet.databinding.FragmentNotificationsBinding;
+
+import java.util.Objects;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
+
+    ListAllQRCodesFromAPI listAllQRCodes;
+
+    Vector<ImageFromAPI> imagesFromAPI;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +86,28 @@ public class NotificationsFragment extends Fragment {
 
         //TODO: get saved qr codes from API
 
+        listAllQRCodes = new ListAllQRCodesFromAPI();
+        listAllQRCodes.execute();
+        try {
+            listAllQRCodes.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        if (listAllQRCodes.getResponseCode() == 200) {
+            imagesFromAPI = listAllQRCodes.getImagesFromAPI();
+
+            for (int i = 0; i < imagesFromAPI.size(); i++) {
+                // TODO: change image save path to a new folder just for application
+                //      then read image paths from imagesFromAPI and then load those into a
+                //      new list of just file types to be used as imageViews to display
+
+            }
+        }
+        else {
+            DialogFragment errorDialog = new ErrorCodeDialogFragment(listAllQRCodes.getResponseCode(), listAllQRCodes.getErrorDetails());
+            errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+        }
 
         //TODO: load saved qr codes from API into grid view
         //      Code from C.Gen to modify and work with (this is in kotlin)
