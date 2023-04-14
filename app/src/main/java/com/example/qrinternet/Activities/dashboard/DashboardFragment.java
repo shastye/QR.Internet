@@ -21,11 +21,13 @@ import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
 import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
 import com.example.qrinternet.Activities.utility.Methods;
+import com.example.qrinternet.Activities.utility.SavedLimitReachedDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -64,17 +66,22 @@ public class DashboardFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
+        Tags.NUM_SAVED_QRCODES = Methods.CountNumberOfSavedImages(Tags.SAVE_PATH);
+
         qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
         ssid_tv = (TextView) root.findViewById(R.id.ssid_textView);
         ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
+        ssid_et.setText("");
         pw_tv = (TextView) root.findViewById(R.id.password_textView);
         pw_et = (EditText) root.findViewById(R.id.password_editText);
+        pw_et.setText("");
         sec_tv = (TextView) root.findViewById(R.id.security_textView);
         sec_s = (Spinner) root.findViewById(R.id.security_spinner);
         hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
         hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
         fn_tv = (TextView) root.findViewById(R.id.filename_textView);
         fn_et = (EditText) root.findViewById(R.id.filename_editText);
+        fn_et.setText("");
         saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
         createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
 
@@ -151,27 +158,41 @@ public class DashboardFragment extends Fragment {
                       filename = filename + ".png";
                   }
 
-                  boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, getQRcode.getBitmap());
-                  if (saved) {
-                      uploadQRcode = new UploadQRCodesToAPI(filename, getQRcode.getBinaryData());
-                      uploadQRcode.execute();
-                      try {
-                          uploadQRcode.get();
-                      } catch (ExecutionException | InterruptedException e) {
-                          e.printStackTrace();
+                  if (Tags.NUM_SAVED_QRCODES <= 5) {
+                      boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, getQRcode.getBitmap());
+                      if (saved) {
+                          uploadQRcode = new UploadQRCodesToAPI(filename, getQRcode.getBinaryData());
+                          uploadQRcode.execute();
+                          try {
+                              uploadQRcode.get();
+                          } catch (ExecutionException | InterruptedException e) {
+                              e.printStackTrace();
+                          }
+
+                          if (uploadQRcode.getResponseCode() == 200) {
+                              DialogFragment savedImage = new ImageSavedDialogFragment();
+                              savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+
+                              showScreen1();
+                          } else {
+                              Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+
+                              DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
+                              errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                          }
                       }
-
-                      if (uploadQRcode.getResponseCode() == 200) {
-                          DialogFragment savedImage = new ImageSavedDialogFragment();
-                          savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
-
-                          showScreen1();
-                      } else {
+                      else {
                           Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 
-                          DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
+                          DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
                           errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                       }
+                  }
+                  else {
+                      Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+
+                      DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
+                      saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                   }
               }
         });
@@ -191,14 +212,17 @@ public class DashboardFragment extends Fragment {
         qrCode.setVisibility(View.INVISIBLE);
         ssid_tv.setVisibility(View.VISIBLE);
         ssid_et.setVisibility(View.VISIBLE);
+        ssid_et.setText("");
         pw_tv.setVisibility(View.VISIBLE);
         pw_et.setVisibility(View.VISIBLE);
+        pw_et.setText("");
         sec_tv.setVisibility(View.VISIBLE);
         sec_s.setVisibility(View.VISIBLE);
         hid_tv.setVisibility(View.VISIBLE);
         hid_cb.setVisibility(View.VISIBLE);
         fn_tv.setVisibility(View.INVISIBLE);
         fn_et.setVisibility(View.INVISIBLE);
+        fn_et.setText("");
         createQRbutton.setVisibility(View.VISIBLE);
         saveQRbutton.setVisibility(View.INVISIBLE);
     }
@@ -206,14 +230,17 @@ public class DashboardFragment extends Fragment {
         qrCode.setVisibility(View.VISIBLE);
         ssid_tv.setVisibility(View.INVISIBLE);
         ssid_et.setVisibility(View.INVISIBLE);
+        ssid_et.setText("");
         pw_tv.setVisibility(View.INVISIBLE);
         pw_et.setVisibility(View.INVISIBLE);
+        pw_et.setText("");
         sec_tv.setVisibility(View.INVISIBLE);
         sec_s.setVisibility(View.INVISIBLE);
         hid_tv.setVisibility(View.INVISIBLE);
         hid_cb.setVisibility(View.INVISIBLE);
         fn_tv.setVisibility(View.VISIBLE);
         fn_et.setVisibility(View.VISIBLE);
+        fn_et.setText("");
         createQRbutton.setVisibility(View.INVISIBLE);
         saveQRbutton.setVisibility(View.VISIBLE);
     }

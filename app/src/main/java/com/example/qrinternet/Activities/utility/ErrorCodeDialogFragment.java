@@ -31,6 +31,9 @@ public class ErrorCodeDialogFragment extends DialogFragment {
         String message = "";
 
         switch(code) {
+            case 100:
+                message = "Image could not be saved\n\nTry renaming the image.\n\n";
+                break;
             case 400:
                 message = "Invalid request sent.\n\n";
                 break;
@@ -58,6 +61,9 @@ public class ErrorCodeDialogFragment extends DialogFragment {
         if (code == 0) {
             message = message + "    Error Detail: Exception occurred during process with message: " +
                     details.toString();
+        }
+        if (code == 100) {
+            message = message;
         }
         else {
             message = message + "    Error Detail: " + details.toString();

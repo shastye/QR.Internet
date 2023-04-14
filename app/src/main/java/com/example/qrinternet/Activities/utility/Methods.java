@@ -21,16 +21,14 @@ public class Methods {
         }
     }
 
-    public static Boolean SaveBinaryAsBINToDevice(String _filename, byte[] _binary) {
-        File file = new File(Tags.SAVE_PATH, _filename);
-
-        try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
-            outputStream.write(_binary);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+    public static int CountNumberOfSavedImages(String _filepath) {
+        File directory = new File(_filepath);
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            return files.length;
         }
-
+        else {
+            return -1;
+        }
     }
 }

@@ -10,9 +10,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 //import com.example.qrinternet.Activities.home.HomeFragment;
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,5 +37,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        File directory = new File(Tags.SAVE_PATH);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
     }
 }
