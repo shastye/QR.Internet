@@ -1,9 +1,16 @@
 package com.example.qrinternet.Activities.notifications;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageFromAPI;
 import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
+import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentNotificationsBinding;
 
 import java.util.Objects;
@@ -27,6 +35,7 @@ public class NotificationsFragment extends Fragment {
     ListAllQRCodesFromAPI listAllQRCodes;
 
     Vector<ImageFromAPI> imagesFromAPI;
+    Vector<Bitmap> bitmapsOfQRCodes;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,51 +50,6 @@ public class NotificationsFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
-        //TODO: create adapter for clicking qr code to view
-        //      Code from C.Gen to modify and work with (this is in kotlin)
-        //      Need to make this into a new subclass
-        /*
-        class PlayerAdapter : BaseAdapter {
-            var playerList = ArrayList<Player>()
-            var context: Context? = null
-
-            constructor(_context: Context, _playerList: ArrayList<Player>) : super() {
-                this.context = _context
-                this.playerList = _playerList
-            }
-
-            override fun getCount(): Int {
-                return playerList.size
-            }
-
-            override fun getItem(position: Int): Any {
-                return playerList[position]
-            }
-
-            override fun getItemId(position: Int): Long {
-                return position.toLong()
-            }
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                val player = this.playerList[position]
-
-                val inflater =
-                    context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val playerView = inflater.inflate(R.layout.image_character_entry, null)
-                playerView.findViewById<ImageView>(R.id.gridChild_frame_imageView)
-                    .setImageResource(R.drawable.temp_gridview_item)
-                playerView.findViewById<TextView>(R.id.gridChild_characterName_textView).text =
-                        player._name
-
-                return playerView
-            }
-        }
-        */
-
-
-
-        //TODO: get saved qr codes from API
-
         listAllQRCodes = new ListAllQRCodesFromAPI();
         listAllQRCodes.execute();
         try {
@@ -96,12 +60,12 @@ public class NotificationsFragment extends Fragment {
 
         if (listAllQRCodes.getResponseCode() == 200) {
             imagesFromAPI = listAllQRCodes.getImagesFromAPI();
+            bitmapsOfQRCodes = new Vector<Bitmap>(5);
 
             for (int i = 0; i < imagesFromAPI.size(); i++) {
-                // TODO: change image save path to a new folder just for application
-                //      then read image paths from imagesFromAPI and then load those into a
-                //      new list of just file types to be used as imageViews to display
-
+                ImageFromAPI image = imagesFromAPI.get(i);
+                Bitmap bitmap = BitmapFactory.decodeFile(image.source);
+                bitmapsOfQRCodes.add(bitmap);
             }
         }
         else {
@@ -109,45 +73,22 @@ public class NotificationsFragment extends Fragment {
             errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
         }
 
-        //TODO: load saved qr codes from API into grid view
-        //      Code from C.Gen to modify and work with (this is in kotlin)
-        /*
-            tempDNDplayers.get()
-                    .addOnSuccessListener { result ->
-                        for (document in result) {
-                            val tempHash: HashMap<String, String> = convertToHashMapStringString(document.data as java.util.HashMap<String, com.google.protobuf.Any>)
-
-                            val tempPlayer = Player(tempHash)
-                            playerList.add(tempPlayer)
-                        }
-
-                        playerAdapter = PlayerAdapter(this, playerList)
-                        findViewById<GridView>(R.id.character_gridView).adapter = playerAdapter
-                    }
-        */
 
 
 
-        // TODO: create grid on click listener
-        //      Code from C.Gen to modify and work with (this is in kotlin)
-        /*
-        val grid = findViewById<GridView>(R.id.character_gridView)
-        grid.onItemClickListener = AdapterView.OnItemClickListener { parent, v, position, id ->
-            val characterName : String
-            val selectedPlayer: Player = playerList[position]
+        GridView gridView = (GridView) root.findViewById(R.id.qrcode_gridView);
+        gridView.setAdapter(new QRAdapter());
 
-            Toast.makeText(this, " Opening Player: " + selectedPlayer._name,
-                Toast.LENGTH_SHORT).show()
 
-            val myIntent = Intent(this, ViewCharacterActivity::class.java)
-            myIntent.putExtra("CHARACTER NAME", selectedPlayer._name)
-            myIntent.putExtra("CHARACTER TYPE", selectedPlayer._char_type.toString())
-            myIntent.putExtra("CHARACTER GAME", selectedPlayer._game_mode.toString())
 
-            startActivity(myIntent)
-            finish()
-        }
-        */
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+                // TODO: Open larger screen with this qr code for better scanning
+                //      Should look like the save screen
+
+            }
+        });
 
 
 
@@ -162,5 +103,40 @@ public class NotificationsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public class QRAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return imagesFromAPI.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return imagesFromAPI.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return (long) position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageFromAPI image = imagesFromAPI.get(position);
+
+            LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View image_view = inflater.inflate(R.layout.image_qr_entry, null);
+
+            ImageView image_imageView = image_view.findViewById(R.id.gridChild_imageView);
+            image_imageView.setImageBitmap(bitmapsOfQRCodes.get(position));
+
+            TextView image_textView = image_view.findViewById(R.id.gridChild_textView);
+            int lastIndex = image.source.lastIndexOf('/');
+            String name = image.source.substring(lastIndex + 1);
+            image_textView.setText(name);
+
+            return image_view;
+        }
     }
 }
