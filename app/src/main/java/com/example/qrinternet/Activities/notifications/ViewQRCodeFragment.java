@@ -34,6 +34,14 @@ public class ViewQRCodeFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
+<<<<<<< HEAD
+=======
+
+        //Vector<ImageFromAPI> temp = notificationsViewModel.imagesFromAPI;
+        //Vector<Bitmap> temp2 = notificationsViewModel.bitmapsOfQRCodes;
+        //int temp3 = notificationsViewModel.positionOfGrid;
+
+>>>>>>> origin/master
         ImageView viewSavedQRCode = (ImageView) root.findViewById(R.id.ViewSavedQRCode_imageView);
         viewSavedQRCode.setImageBitmap(notificationsViewModel.getBitmapsOfQRCodes().get(notificationsViewModel.getPositionOfGrid()));
         TextView viewSavedText = (TextView) root.findViewById(R.id.savedFilename_textView);
@@ -41,6 +49,11 @@ public class ViewQRCodeFragment extends Fragment {
         String name = notificationsViewModel.getImagesFromAPI().get(notificationsViewModel.getPositionOfGrid()).source.substring(lastIndex + 1);
         viewSavedText.setText(name);
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/master
         //
 
         // END ADDITIONS
