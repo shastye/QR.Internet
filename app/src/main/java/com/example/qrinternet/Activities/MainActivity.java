@@ -1,7 +1,6 @@
 package com.example.qrinternet.Activities;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -42,5 +41,11 @@ public class MainActivity extends AppCompatActivity {
         if (!directory.exists()) {
             directory.mkdir();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        return navController.navigateUp() || super.onSupportNavigateUp();
     }
 }
