@@ -1,7 +1,5 @@
 package com.example.qrinternet.Activities.utility;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -10,8 +8,6 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.Vector;
 
 import okhttp3.OkHttpClient;
@@ -23,7 +19,7 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
     private int responseCode;
     private JSONObject errorDetails;
     private JSONArray responseArray;
-    private Vector<ImageFromAPI> imagesFromAPI;
+    private Vector<ImageDetails> imagesFromAPI;
 
     @Override
     protected Long doInBackground(String... strings) {
@@ -66,12 +62,12 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
                     Log.e("OOPS", "List is probably empty");
                 }
 
-                imagesFromAPI = new Vector<ImageFromAPI>(responseArray.length());
+                imagesFromAPI = new Vector<ImageDetails>(responseArray.length());
                 for (int i =0; i < responseArray.length(); i++) {
                     Gson gson = new Gson();
                     JSONObject temp = responseArray.getJSONObject(i);
 
-                    ImageFromAPI image = gson.fromJson(temp.toString(), ImageFromAPI.class);
+                    ImageDetails image = gson.fromJson(temp.toString(), ImageDetails.class);
                     imagesFromAPI.add(image);
                 }
             }
@@ -98,13 +94,14 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
         // TODO: check this.exception
         // TODO: do something with the feed
     }
+
     public int getResponseCode() {
         return responseCode;
     }
     public JSONObject getErrorDetails() {
         return errorDetails;
     }
-    public Vector<ImageFromAPI> getImagesFromAPI() {
+    public Vector<ImageDetails> getImagesFromAPI() {
         return imagesFromAPI;
     }
 }

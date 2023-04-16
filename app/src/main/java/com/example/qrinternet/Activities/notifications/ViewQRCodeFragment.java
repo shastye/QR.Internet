@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.qrinternet.Activities.utility.ImageFromAPI;
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewQrCodeBinding;
 

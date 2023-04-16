@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.qrinternet.Activities.utility.ImageFromAPI;
+import com.example.qrinternet.Activities.utility.ImageDetails;
 
 import java.util.Vector;
 
@@ -14,7 +14,7 @@ public class NotificationsViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    private static Vector<ImageFromAPI> imagesFromAPI;
+    private static Vector<ImageDetails> imagesFromAPI;
     private static Vector<Bitmap> bitmapsOfQRCodes;
     private static int positionOfGrid;
 
@@ -27,7 +27,7 @@ public class NotificationsViewModel extends ViewModel {
         return mText;
     }
 
-    public Vector<ImageFromAPI> getImagesFromAPI() {
+    public Vector<ImageDetails> getImagesFromAPI() {
         return imagesFromAPI;
     }
     public Vector<Bitmap> getBitmapsOfQRCodes() {
@@ -37,7 +37,7 @@ public class NotificationsViewModel extends ViewModel {
         return positionOfGrid;
     }
 
-    public void setImagesFromAPI(Vector<ImageFromAPI> _imagesFromAPI){
+    public void setImagesFromAPI(Vector<ImageDetails> _imagesFromAPI){
         imagesFromAPI = _imagesFromAPI;
     }
     public void setBitmapsOfQRCodes(Vector<Bitmap> _bitmapsOfQRCodes) {

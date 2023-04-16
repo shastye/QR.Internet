@@ -1,6 +1,6 @@
 package com.example.qrinternet.Activities.utility;
 
-public class ImageFromAPI {
+public class ImageDetails {
     public String id;
     public String source;
     public int size;

@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.utility.ImageFromAPI;
+import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentNotificationsBinding;
@@ -61,7 +61,7 @@ public class NotificationsFragment extends Fragment {
             notificationsViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
 
             for (int i = 0; i < notificationsViewModel.getImagesFromAPI().size(); i++) {
-                ImageFromAPI image = notificationsViewModel.getImagesFromAPI().get(i);
+                ImageDetails image = notificationsViewModel.getImagesFromAPI().get(i);
                 Bitmap bitmap = BitmapFactory.decodeFile(image.source);
                 notificationsViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
@@ -119,7 +119,7 @@ public class NotificationsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageFromAPI image = notificationsViewModel.getImagesFromAPI().get(position);
+            ImageDetails image = notificationsViewModel.getImagesFromAPI().get(position);
 
             LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View image_view = inflater.inflate(R.layout.image_qr_entry, null);
