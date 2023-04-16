@@ -34,8 +34,14 @@ public class ErrorCodeDialogFragment extends DialogFragment {
             case 100:
                 message = "Image could not be saved\n\nTry renaming the image.\n\n";
                 break;
+            case 104:
+                message = "Image could not be deleted\n\n";
+                break;
             case 400:
                 message = "Invalid request sent.\n\n";
+                break;
+            case 404:
+                message = "Image was not Found.\n\n";
                 break;
             case 415:
                 message = "Request content-type not supported or not specified.\n\n";
@@ -62,7 +68,7 @@ public class ErrorCodeDialogFragment extends DialogFragment {
             message = message + "    Error Detail: Exception occurred during process with message: " +
                     details.toString();
         }
-        if (code == 100) {
+        if (code == 100 || code == 104) {
             message = message;
         }
         else {
