@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">QR.Internet</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Create/Save QR Code</string>
+    <string name="title_dashboard">Create QR Code</string>
     <string name="title_notifications">Saved QR Codes</string>
 
     <string name="buttonLabel_dashboard">Create QR Code</string>

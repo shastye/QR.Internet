@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
@@ -36,11 +37,8 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
 
     GetQRCodeFromAPI getQRcode;
-    UploadQRCodesToAPI uploadQRcode;
 
-    ImageView qrCode;
     Button createQRbutton;
-    Button saveQRbutton;
     TextView ssid_tv;
     EditText ssid_et;
     TextView pw_tv;
@@ -49,8 +47,6 @@ public class DashboardFragment extends Fragment {
     Spinner sec_s;
     TextView hid_tv;
     CheckBox hid_cb;
-    TextView fn_tv;
-    EditText fn_et;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,9 +62,6 @@ public class DashboardFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
-        Tags.NUM_SAVED_QRCODES = Methods.CountNumberOfSavedImages(Tags.SAVE_PATH);
-
-        qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
         ssid_tv = (TextView) root.findViewById(R.id.ssid_textView);
         ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
         ssid_et.setText("");
@@ -79,17 +72,11 @@ public class DashboardFragment extends Fragment {
         sec_s = (Spinner) root.findViewById(R.id.security_spinner);
         hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
         hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
-        fn_tv = (TextView) root.findViewById(R.id.filename_textView);
-        fn_et = (EditText) root.findViewById(R.id.filename_editText);
-        fn_et.setText("");
-        saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
         createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
 
         //////////////////////////
         //  Generating QR Code  //
         //////////////////////////
-
-        showScreen1();
 
         createQRbutton.setOnClickListener(new View.OnClickListener()
         {
@@ -119,10 +106,10 @@ public class DashboardFragment extends Fragment {
                     }
 
                     if (getQRcode.getResponseCode() == 200) {
-                        Bitmap bitmap = getQRcode.getBitmap();
-                        qrCode.setImageBitmap(bitmap);
+                        dashboardViewModel.setBitmap(getQRcode.getBitmap());
+                        dashboardViewModel.setBinaryData(getQRcode.getBinaryData());
 
-                        showScreen2();
+                        Navigation.findNavController(root).navigate(R.id.action_navigation_dashboard_to_navigation_save);
                     }
                     else {
                         DialogFragment errorDialog = new ErrorCodeDialogFragment(getQRcode.getResponseCode(), getQRcode.getErrorDetails());
@@ -131,70 +118,6 @@ public class DashboardFragment extends Fragment {
                 }
 
             }
-        });
-
-
-        //////////////////////
-        //  Saving QR Code  //
-        //////////////////////
-
-        saveQRbutton.setOnClickListener(new View.OnClickListener()
-        {
-              @Override
-              public void onClick(View v) {
-                  Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
-
-                  String filename = fn_et.getText().toString();
-                  filename = filename.trim();
-                  if (filename.equals("")) {
-                      filename = "qrcode_" + Tags.NUM_SAVED_QRCODES + ".png";
-                  }
-                  else if (!filename.endsWith(".png")) {
-                      int index = filename.indexOf('.');
-                      if (index == -1) {
-                          index = filename.length();
-                      }
-                      filename = filename.subSequence(0, index).toString();
-                      filename = filename + ".png";
-                  }
-
-                  if (Tags.NUM_SAVED_QRCODES <= 5) {
-                      boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, getQRcode.getBitmap());
-                      if (saved) {
-                          uploadQRcode = new UploadQRCodesToAPI(filename, getQRcode.getBinaryData());
-                          uploadQRcode.execute();
-                          try {
-                              uploadQRcode.get();
-                          } catch (ExecutionException | InterruptedException e) {
-                              e.printStackTrace();
-                          }
-
-                          if (uploadQRcode.getResponseCode() == 200) {
-                              DialogFragment savedImage = new ImageSavedDialogFragment();
-                              savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
-
-                              showScreen1();
-                          } else {
-                              Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
-                              DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
-                              errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                          }
-                      }
-                      else {
-                          Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
-                          DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
-                          errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                      }
-                  }
-                  else {
-                      Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
-                      DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
-                      saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                  }
-              }
         });
 
         // END ADDITIONS
@@ -206,42 +129,5 @@ public class DashboardFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void showScreen1() {
-        qrCode.setVisibility(View.INVISIBLE);
-        ssid_tv.setVisibility(View.VISIBLE);
-        ssid_et.setVisibility(View.VISIBLE);
-        ssid_et.setText("");
-        pw_tv.setVisibility(View.VISIBLE);
-        pw_et.setVisibility(View.VISIBLE);
-        pw_et.setText("");
-        sec_tv.setVisibility(View.VISIBLE);
-        sec_s.setVisibility(View.VISIBLE);
-        hid_tv.setVisibility(View.VISIBLE);
-        hid_cb.setVisibility(View.VISIBLE);
-        fn_tv.setVisibility(View.INVISIBLE);
-        fn_et.setVisibility(View.INVISIBLE);
-        fn_et.setText("");
-        createQRbutton.setVisibility(View.VISIBLE);
-        saveQRbutton.setVisibility(View.INVISIBLE);
-    }
-    private void showScreen2() {
-        qrCode.setVisibility(View.VISIBLE);
-        ssid_tv.setVisibility(View.INVISIBLE);
-        ssid_et.setVisibility(View.INVISIBLE);
-        ssid_et.setText("");
-        pw_tv.setVisibility(View.INVISIBLE);
-        pw_et.setVisibility(View.INVISIBLE);
-        pw_et.setText("");
-        sec_tv.setVisibility(View.INVISIBLE);
-        sec_s.setVisibility(View.INVISIBLE);
-        hid_tv.setVisibility(View.INVISIBLE);
-        hid_cb.setVisibility(View.INVISIBLE);
-        fn_tv.setVisibility(View.VISIBLE);
-        fn_et.setVisibility(View.VISIBLE);
-        fn_et.setText("");
-        createQRbutton.setVisibility(View.INVISIBLE);
-        saveQRbutton.setVisibility(View.VISIBLE);
     }
 }
