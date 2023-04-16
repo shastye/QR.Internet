@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/notification_layout"
+    android:id="@+id/viewsaved_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.notifications.NotificationsFragment">
+    tools:context=".Activities.notifications.ViewQRCodeFragment">
 
     <TextView
-        android:id="@+id/text_notifications"
+        android:id="@+id/text_viewSaved"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -21,26 +21,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <GridView
-        android:id="@+id/qrcode_gridView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        android:choiceMode="singleChoice"
-        android:fadeScrollbars="true"
-        android:foregroundGravity="center"
-        android:isScrollContainer="true"
-        android:numColumns="3"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical"
-        android:verticalScrollbarPosition="right"
-        android:verticalSpacing="100dp"
+    <ImageView
+        android:id="@+id/ViewSavedQRCode_imageView"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:src="@mipmap/ic_launcher_round"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/savedFilename_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text=" File Name "
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ViewSavedQRCode_imageView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

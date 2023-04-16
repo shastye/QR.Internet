@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageFromAPI;
@@ -33,14 +34,11 @@ public class NotificationsFragment extends Fragment {
     private FragmentNotificationsBinding binding;
 
     ListAllQRCodesFromAPI listAllQRCodes;
-
-    Vector<ImageFromAPI> imagesFromAPI;
-    Vector<Bitmap> bitmapsOfQRCodes;
+    NotificationsViewModel notificationsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -59,13 +57,13 @@ public class NotificationsFragment extends Fragment {
         }
 
         if (listAllQRCodes.getResponseCode() == 200) {
-            imagesFromAPI = listAllQRCodes.getImagesFromAPI();
-            bitmapsOfQRCodes = new Vector<Bitmap>(5);
+            notificationsViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
+            notificationsViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
 
-            for (int i = 0; i < imagesFromAPI.size(); i++) {
-                ImageFromAPI image = imagesFromAPI.get(i);
+            for (int i = 0; i < notificationsViewModel.getImagesFromAPI().size(); i++) {
+                ImageFromAPI image = notificationsViewModel.getImagesFromAPI().get(i);
                 Bitmap bitmap = BitmapFactory.decodeFile(image.source);
-                bitmapsOfQRCodes.add(bitmap);
+                notificationsViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
         }
         else {
@@ -83,10 +81,8 @@ public class NotificationsFragment extends Fragment {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
-                // TODO: Open larger screen with this qr code for better scanning
-                //      Should look like the save screen
-
+                notificationsViewModel.setPositionOfGrid(position);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_notifications_to_navigation_viewSaved);
             }
         });
 
@@ -108,12 +104,12 @@ public class NotificationsFragment extends Fragment {
     public class QRAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return imagesFromAPI.size();
+            return notificationsViewModel.getImagesFromAPI().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return imagesFromAPI.get(position);
+            return notificationsViewModel.getImagesFromAPI().get(position);
         }
 
         @Override
@@ -123,13 +119,13 @@ public class NotificationsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageFromAPI image = imagesFromAPI.get(position);
+            ImageFromAPI image = notificationsViewModel.getImagesFromAPI().get(position);
 
             LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View image_view = inflater.inflate(R.layout.image_qr_entry, null);
 
             ImageView image_imageView = image_view.findViewById(R.id.gridChild_imageView);
-            image_imageView.setImageBitmap(bitmapsOfQRCodes.get(position));
+            image_imageView.setImageBitmap(notificationsViewModel.getBitmapsOfQRCodes().get(position));
 
             TextView image_textView = image_view.findViewById(R.id.gridChild_textView);
             int lastIndex = image.source.lastIndexOf('/');
