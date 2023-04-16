@@ -5,7 +5,7 @@
     android:id="@+id/dashboard_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.dashboard.SaveQRCodeFragment">
+    tools:context=".Activities.create.SaveQRCodeFragment">
 
     <TextView
         android:id="@+id/text_save"

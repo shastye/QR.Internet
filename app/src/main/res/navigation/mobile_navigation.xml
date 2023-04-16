@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.qrinternet.Activities.dashboard.DashboardFragment"
+        android:name="com.example.qrinternet.Activities.create.CreateQRCodeFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        tools:layout="@layout/fragment_create_qr_code" >
         <action
             android:id="@+id/action_navigation_dashboard_to_navigation_save"
             app:destination="@id/navigation_save"
@@ -20,9 +20,9 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.qrinternet.Activities.notifications.NotificationsFragment"
+        android:name="com.example.qrinternet.Activities.view.ViewAllQRCodesFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" >
+        tools:layout="@layout/fragment_view_all_qr_codes" >
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_viewSaved"
             app:destination="@id/navigation_viewSaved"
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/navigation_viewSaved"
-        android:name="com.example.qrinternet.Activities.notifications.ViewQRCodeFragment"
+        android:name="com.example.qrinternet.Activities.view.ViewQRCodeFragment"
         android:label="View QR Code"
         tools:layout="@layout/fragment_view_qr_code" >
         <action
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/navigation_save"
-        android:name="com.example.qrinternet.Activities.dashboard.SaveQRCodeFragment"
+        android:name="com.example.qrinternet.Activities.create.SaveQRCodeFragment"
         android:label="Save QR Code"
         tools:layout="@layout/fragment_save_qr_code" />
 

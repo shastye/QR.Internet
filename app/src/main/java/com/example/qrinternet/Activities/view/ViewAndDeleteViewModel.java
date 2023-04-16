@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.notifications;
+package com.example.qrinternet.Activities.view;
 
 import android.graphics.Bitmap;
 
@@ -10,7 +10,7 @@ import com.example.qrinternet.Activities.utility.ImageDetails;
 
 import java.util.Vector;
 
-public class NotificationsViewModel extends ViewModel {
+public class ViewAndDeleteViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
@@ -18,7 +18,7 @@ public class NotificationsViewModel extends ViewModel {
     private static Vector<Bitmap> bitmapsOfQRCodes;
     private static int positionOfGrid;
 
-    public NotificationsViewModel() {
+    public ViewAndDeleteViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("");
     }

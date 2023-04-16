@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.dashboard;
+package com.example.qrinternet.Activities.create;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 
 public class SaveQRCodeFragment extends Fragment {
     private FragmentSaveQrCodeBinding binding;
-    DashboardViewModel dashboardViewModel;
+    CreateAndSaveViewModel createAndSaveViewModel;
 
     UploadQRCodesToAPI uploadQRcode;
 
@@ -40,13 +40,13 @@ public class SaveQRCodeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        createAndSaveViewModel = new ViewModelProvider(this).get(CreateAndSaveViewModel.class);
 
         binding = FragmentSaveQrCodeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textSave;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        createAndSaveViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
@@ -58,7 +58,7 @@ public class SaveQRCodeFragment extends Fragment {
         fn_et.setText("");
         saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
-        qrCode.setImageBitmap(dashboardViewModel.getBitmap());
+        qrCode.setImageBitmap(createAndSaveViewModel.getBitmap());
 
         saveQRbutton.setOnClickListener(new View.OnClickListener()
         {
@@ -81,9 +81,9 @@ public class SaveQRCodeFragment extends Fragment {
                 }
 
                 if (Tags.NUM_SAVED_QRCODES <= 5) {
-                    boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, dashboardViewModel.getBitmap());
+                    boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, createAndSaveViewModel.getBitmap());
                     if (saved) {
-                        uploadQRcode = new UploadQRCodesToAPI(filename, dashboardViewModel.getBinaryData());
+                        uploadQRcode = new UploadQRCodesToAPI(filename, createAndSaveViewModel.getBinaryData());
                         uploadQRcode.execute();
                         try {
                             uploadQRcode.get();

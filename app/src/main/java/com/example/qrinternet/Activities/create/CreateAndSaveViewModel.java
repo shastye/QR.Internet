@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.dashboard;
+package com.example.qrinternet.Activities.create;
 
 import android.graphics.Bitmap;
 
@@ -6,14 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class CreateAndSaveViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
     private static Bitmap bitmap;
     private static byte[] binaryData;
 
-    public DashboardViewModel() {
+    public CreateAndSaveViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("");
     }

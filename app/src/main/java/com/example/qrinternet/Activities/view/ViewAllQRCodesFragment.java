@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.notifications;
+package com.example.qrinternet.Activities.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,28 +23,28 @@ import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
 import com.example.qrinternet.R;
-import com.example.qrinternet.databinding.FragmentNotificationsBinding;
+import com.example.qrinternet.databinding.FragmentViewAllQrCodesBinding;
 
 import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
-public class NotificationsFragment extends Fragment {
+public class ViewAllQRCodesFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
+    private FragmentViewAllQrCodesBinding binding;
 
     ListAllQRCodesFromAPI listAllQRCodes;
-    NotificationsViewModel notificationsViewModel;
+    ViewAndDeleteViewModel viewAndDeleteViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
+        viewAndDeleteViewModel = new ViewModelProvider(this).get(ViewAndDeleteViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentViewAllQrCodesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        viewAndDeleteViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
@@ -57,13 +57,13 @@ public class NotificationsFragment extends Fragment {
         }
 
         if (listAllQRCodes.getResponseCode() == 200) {
-            notificationsViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
-            notificationsViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
+            viewAndDeleteViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
+            viewAndDeleteViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
 
-            for (int i = 0; i < notificationsViewModel.getImagesFromAPI().size(); i++) {
-                ImageDetails image = notificationsViewModel.getImagesFromAPI().get(i);
+            for (int i = 0; i < viewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
+                ImageDetails image = viewAndDeleteViewModel.getImagesFromAPI().get(i);
                 Bitmap bitmap = BitmapFactory.decodeFile(image.source);
-                notificationsViewModel.getBitmapsOfQRCodes().add(bitmap);
+                viewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
         }
         else {
@@ -81,7 +81,7 @@ public class NotificationsFragment extends Fragment {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                notificationsViewModel.setPositionOfGrid(position);
+                viewAndDeleteViewModel.setPositionOfGrid(position);
                 Navigation.findNavController(root).navigate(R.id.action_navigation_notifications_to_navigation_viewSaved);
             }
         });
@@ -104,12 +104,12 @@ public class NotificationsFragment extends Fragment {
     public class QRAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return notificationsViewModel.getImagesFromAPI().size();
+            return viewAndDeleteViewModel.getImagesFromAPI().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return notificationsViewModel.getImagesFromAPI().get(position);
+            return viewAndDeleteViewModel.getImagesFromAPI().get(position);
         }
 
         @Override
@@ -119,13 +119,13 @@ public class NotificationsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageDetails image = notificationsViewModel.getImagesFromAPI().get(position);
+            ImageDetails image = viewAndDeleteViewModel.getImagesFromAPI().get(position);
 
             LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View image_view = inflater.inflate(R.layout.image_qr_entry, null);
 
             ImageView image_imageView = image_view.findViewById(R.id.gridChild_imageView);
-            image_imageView.setImageBitmap(notificationsViewModel.getBitmapsOfQRCodes().get(position));
+            image_imageView.setImageBitmap(viewAndDeleteViewModel.getBitmapsOfQRCodes().get(position));
 
             TextView image_textView = image_view.findViewById(R.id.gridChild_textView);
             int lastIndex = image.source.lastIndexOf('/');

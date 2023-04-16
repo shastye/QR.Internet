@@ -5,7 +5,7 @@
     android:id="@+id/viewsaved_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.notifications.ViewQRCodeFragment">
+    tools:context=".Activities.view.ViewQRCodeFragment">
 
     <TextView
         android:id="@+id/text_viewSaved"
