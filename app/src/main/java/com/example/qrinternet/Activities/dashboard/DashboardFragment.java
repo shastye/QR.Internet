@@ -9,8 +9,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ImageView;
-import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -20,15 +18,9 @@ import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
-import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
-import com.example.qrinternet.Activities.utility.Methods;
-import com.example.qrinternet.Activities.utility.SavedLimitReachedDialogFragment;
-import com.example.qrinternet.Activities.utility.Tags;
-import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentDashboardBinding;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 

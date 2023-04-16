@@ -18,7 +18,6 @@ import com.example.qrinternet.Activities.utility.DeleteImageFromAPI;
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDeletedDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDetails;
-import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewQrCodeBinding;

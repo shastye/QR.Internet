@@ -5,7 +5,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class Methods {
     public static Boolean SaveBitmapAsPNGToDevice(String _filename, Bitmap _bitmap) {
