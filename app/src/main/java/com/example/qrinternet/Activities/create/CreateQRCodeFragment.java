@@ -30,16 +30,6 @@ public class CreateQRCodeFragment extends Fragment {
 
     GetQRCodeFromAPI getQRcode;
 
-    Button createQRbutton;
-    TextView ssid_tv;
-    EditText ssid_et;
-    TextView pw_tv;
-    EditText pw_et;
-    TextView sec_tv;
-    Spinner sec_s;
-    TextView hid_tv;
-    CheckBox hid_cb;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         CreateAndSaveViewModel createAndSaveViewModel =
@@ -54,17 +44,13 @@ public class CreateQRCodeFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
-        ssid_tv = (TextView) root.findViewById(R.id.ssid_textView);
-        ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
+        EditText ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
         ssid_et.setText("");
-        pw_tv = (TextView) root.findViewById(R.id.password_textView);
-        pw_et = (EditText) root.findViewById(R.id.password_editText);
+        EditText pw_et = (EditText) root.findViewById(R.id.password_editText);
         pw_et.setText("");
-        sec_tv = (TextView) root.findViewById(R.id.security_textView);
-        sec_s = (Spinner) root.findViewById(R.id.security_spinner);
-        hid_tv = (TextView) root.findViewById(R.id.hidden_textView);
-        hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
-        createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
+        Spinner sec_s = (Spinner) root.findViewById(R.id.security_spinner);
+        CheckBox hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
+        Button createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
 
         //////////////////////////
         //  Generating QR Code  //

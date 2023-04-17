@@ -31,8 +31,6 @@ public class ViewQRCodeFragment extends Fragment {
 
     DeleteImageFromAPI deleteQRCode;
 
-    Button deleteQRButton;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewAndDeleteViewModel = new ViewModelProvider(this).get(ViewAndDeleteViewModel.class);
@@ -52,7 +50,7 @@ public class ViewQRCodeFragment extends Fragment {
         String name = viewAndDeleteViewModel.getImagesFromAPI().get(viewAndDeleteViewModel.getPositionOfGrid()).source.substring(lastIndex + 1);
         viewSavedText.setText(name);
 
-        deleteQRButton = (Button) root.findViewById(R.id.deleteQRCode_button);
+        Button deleteQRButton = (Button) root.findViewById(R.id.deleteQRCode_button);
 
         deleteQRButton.setOnClickListener(new View.OnClickListener() {
             @Override

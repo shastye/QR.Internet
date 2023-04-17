@@ -32,12 +32,6 @@ public class SaveQRCodeFragment extends Fragment {
 
     UploadQRCodesToAPI uploadQRcode;
 
-    ImageView qrCode;
-    TextView fn_tv;
-    EditText fn_et;
-    Button saveQRbutton;
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         createAndSaveViewModel = new ViewModelProvider(this).get(CreateAndSaveViewModel.class);
@@ -52,11 +46,10 @@ public class SaveQRCodeFragment extends Fragment {
 
         Tags.NUM_SAVED_QRCODES = Methods.CountNumberOfSavedImages(Tags.SAVE_PATH);
 
-        qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
-        fn_tv = (TextView) root.findViewById(R.id.filename_textView);
-        fn_et = (EditText) root.findViewById(R.id.filename_editText);
+        ImageView qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
+        EditText fn_et = (EditText) root.findViewById(R.id.filename_editText);
         fn_et.setText("");
-        saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
+        Button saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
         qrCode.setImageBitmap(createAndSaveViewModel.getBitmap());
 
