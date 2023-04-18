@@ -1,7 +1,6 @@
 package com.example.qrinternet.Activities.create;
 
 import android.content.Context;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -171,7 +169,7 @@ public class CreateQRCodeFragment extends Fragment {
                         createAndSaveViewModel.setBitmap(getQRcode.getBitmap());
                         createAndSaveViewModel.setBinaryData(getQRcode.getBinaryData());
 
-                        Navigation.findNavController(root).navigate(R.id.action_navigation_dashboard_to_navigation_save);
+                        Navigation.findNavController(root).navigate(R.id.action_navigation_create_to_navigation_save);
                     }
                     else {
                         DialogFragment errorDialog = new ErrorCodeDialogFragment(getQRcode.getResponseCode(), getQRcode.getErrorDetails());

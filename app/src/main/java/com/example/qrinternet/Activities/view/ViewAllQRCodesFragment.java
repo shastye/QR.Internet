@@ -82,7 +82,7 @@ public class ViewAllQRCodesFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 viewAndDeleteViewModel.setPositionOfGrid(position);
-                Navigation.findNavController(root).navigate(R.id.action_navigation_notifications_to_navigation_viewSaved);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_viewAll_to_navigation_viewSaved);
             }
         });
 
