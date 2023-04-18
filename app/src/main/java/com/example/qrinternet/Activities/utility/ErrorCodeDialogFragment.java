@@ -3,7 +3,10 @@ package com.example.qrinternet.Activities.utility;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -24,9 +27,27 @@ public class ErrorCodeDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {}
-                });
+        builder.setPositiveButton("Send Email to Customer Support", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // acquired from https://stackoverflow.com/questions/2197741/how-to-send-emails-from-my-android-application
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"shastye.7x@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Error in QR.Internet");
+                intent.putExtra(Intent.EXTRA_TEXT   , "Error Code: " + code + "\nError Message: " + details.toString());
+                try {
+                    startActivity(Intent.createChooser(intent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
 
         String message = "";
 
