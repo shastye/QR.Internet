@@ -139,4 +139,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_dashboard"
         tools:ignore="HardcodedText" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/useLocalWifi_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:checked="false"
+        android:text="Use Local Wifi?: "
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/ssid_textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:checked="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>
