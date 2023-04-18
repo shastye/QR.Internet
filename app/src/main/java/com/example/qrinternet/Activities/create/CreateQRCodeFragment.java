@@ -4,7 +4,11 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -57,6 +61,8 @@ public class CreateQRCodeFragment extends Fragment {
         Spinner sec_s = (Spinner) root.findViewById(R.id.security_spinner);
         CheckBox hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
         Button createQRbutton = (Button) root.findViewById(R.id.CreateQRCode_button);
+
+        setHasOptionsMenu(true);
 
         //////////////////////////
         //  Generating QR Code  //
@@ -190,4 +196,15 @@ public class CreateQRCodeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.toolar_help) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_create_to_navigation_instructions);
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.qrinternet.Activities.create;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
@@ -52,6 +54,8 @@ public class SaveQRCodeFragment extends Fragment {
         Button saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
         qrCode.setImageBitmap(createAndSaveViewModel.getBitmap());
+
+        setHasOptionsMenu(true);
 
         saveQRbutton.setOnClickListener(new View.OnClickListener()
         {
@@ -116,5 +120,21 @@ public class SaveQRCodeFragment extends Fragment {
 
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.toolar_help) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_save_to_navigation_instructions);
+            return true;
+        }
+
+        return false;
     }
 }

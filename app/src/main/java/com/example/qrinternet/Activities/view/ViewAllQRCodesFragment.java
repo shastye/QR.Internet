@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,6 +50,8 @@ public class ViewAllQRCodesFragment extends Fragment {
         viewAndDeleteViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // ADDITIONS ADDED BETWEEN COMMENTS
+
+        setHasOptionsMenu(true);
 
         listAllQRCodes = new ListAllQRCodesFromAPI();
         listAllQRCodes.execute();
@@ -99,6 +104,16 @@ public class ViewAllQRCodesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.toolar_help) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_viewAll_to_navigation_instructions);
+            return true;
+        }
+
+        return false;
     }
 
     public class QRAdapter extends BaseAdapter {

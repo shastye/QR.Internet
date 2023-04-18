@@ -16,6 +16,9 @@
             app:popUpTo="@id/navigation_save"
             app:popUpToInclusive="true"
             app:popUpToSaveState="true" />
+        <action
+            android:id="@+id/action_navigation_create_to_navigation_instructions"
+            app:destination="@id/navigation_instructions" />
     </fragment>
 
     <fragment
@@ -29,6 +32,9 @@
             app:popUpTo="@id/navigation_viewSaved"
             app:popUpToInclusive="true"
             app:popUpToSaveState="true" />
+        <action
+            android:id="@+id/action_navigation_viewAll_to_navigation_instructions"
+            app:destination="@id/navigation_instructions" />
     </fragment>
 
     <fragment
@@ -39,12 +45,25 @@
         <action
             android:id="@+id/action_navigation_viewSaved_to_navigation_notifications"
             app:destination="@id/navigation_viewAll" />
+        <action
+            android:id="@+id/action_navigation_viewSaved_to_navigation_instructions"
+            app:destination="@id/navigation_instructions" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_save"
         android:name="com.example.qrinternet.Activities.create.SaveQRCodeFragment"
         android:label="Save QR Code"
-        tools:layout="@layout/fragment_save_qr_code" />
+        tools:layout="@layout/fragment_save_qr_code" >
+        <action
+            android:id="@+id/action_navigation_save_to_navigation_instructions"
+            app:destination="@id/navigation_instructions" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_instructions"
+        android:name="com.example.qrinternet.Activities.utility.InstructionsFragment"
+        android:label="Instructions"
+        tools:layout="@layout/fragment_instructions" />
 
 </navigation>

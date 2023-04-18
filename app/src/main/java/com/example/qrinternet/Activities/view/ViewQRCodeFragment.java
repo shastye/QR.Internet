@@ -2,6 +2,9 @@ package com.example.qrinternet.Activities.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,6 +43,8 @@ public class ViewQRCodeFragment extends Fragment {
 
         final TextView textView = binding.textViewSaved;
         viewAndDeleteViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        setHasOptionsMenu(true);
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
@@ -92,5 +97,15 @@ public class ViewQRCodeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.toolar_help) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_viewSaved_to_navigation_instructions);
+            return true;
+        }
+
+        return false;
     }
 }
