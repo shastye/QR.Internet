@@ -32,7 +32,7 @@ public class ErrorCodeDialogFragment extends DialogFragment {
                 // acquired from https://stackoverflow.com/questions/2197741/how-to-send-emails-from-my-android-application
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
-                intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"shastye.7x@gmail.com"});
+                intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{Tags.EMAIL});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Error in QR.Internet");
                 intent.putExtra(Intent.EXTRA_TEXT   , "Error Code: " + code + "\nError Message: " + details.toString());
                 try {

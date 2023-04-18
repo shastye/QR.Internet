@@ -3,7 +3,10 @@
     android:id="@+id/toolbar_menu">
 
     <item
-        android:id="@+id/toolar_help"
-        android:title="Help" />
+        android:id="@+id/toolar_instructions"
+        android:title="Instructions" />
+    <item
+        android:id="@+id/toolbar_contactCustomerSupport"
+        android:title="Contact Customer Support" />
 
 </menu>

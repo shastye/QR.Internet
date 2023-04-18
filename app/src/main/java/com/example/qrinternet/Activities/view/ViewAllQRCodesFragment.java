@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
+import com.example.qrinternet.Activities.utility.SendEmailDialogFragment;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewAllQrCodesBinding;
 
@@ -108,6 +109,11 @@ public class ViewAllQRCodesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.toolar_instructions) {
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_viewAll_to_navigation_instructions);
+            return true;
+        }
+        else if (item.getItemId() == R.id.toolbar_contactCustomerSupport) {
+            DialogFragment sendEmailDialog = new SendEmailDialogFragment();
+            sendEmailDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
             return true;
         }
 
