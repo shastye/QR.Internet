@@ -3,8 +3,6 @@ package com.example.qrinternet.Activities.create;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -132,7 +130,7 @@ public class SaveQRCodeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.toolar_help) {
+        if (item.getItemId() == R.id.toolar_instructions) {
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_save_to_navigation_instructions);
             return true;
         }
