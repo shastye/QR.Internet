@@ -189,6 +189,28 @@ public class CreateQRCodeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        View root = binding.getRoot();
+
+        SwitchMaterial ulw_sw = (SwitchMaterial) root.findViewById(R.id.useLocalWifi_switch);
+        EditText ssid_et = (EditText) root.findViewById(R.id.ssid_editText);
+        Spinner sec_s = (Spinner) root.findViewById(R.id.security_spinner);
+        CheckBox hid_cb = (CheckBox) root.findViewById(R.id.hidden_checkBox);
+
+        if (ulw_sw.isChecked()) {
+            ssid_et.setEnabled(false);
+            sec_s.setEnabled(false);
+            hid_cb.setEnabled(false);
+        }
+        else {
+            ssid_et.setEnabled(true);
+            sec_s.setEnabled(true);
+            hid_cb.setEnabled(true);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
