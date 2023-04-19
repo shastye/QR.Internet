@@ -1,10 +1,13 @@
 package com.example.qrinternet.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,6 +45,13 @@ public class MainActivity extends AppCompatActivity {
         File directory = new File(Tags.SAVE_PATH);
         if (!directory.exists()) {
             directory.mkdir();
+        }
+
+        if (ContextCompat.checkSelfPermission(binding.getRoot().getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 77);
+        }
+        if (ContextCompat.checkSelfPermission(binding.getRoot().getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 777);
         }
     }
 

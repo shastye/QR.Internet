@@ -1,6 +1,8 @@
 package com.example.qrinternet.Activities.create;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -90,7 +93,14 @@ public class CreateQRCodeFragment extends Fragment {
                     WifiManager wifiManager = (WifiManager) root.getContext().getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-                    ssid_et.setText(wifiInfo.getSSID());
+                    String ssid = wifiInfo.getSSID();
+                    ssid = ssid.trim();
+                    if (ssid.contains("\"")) {
+                        ssid_et.setText(ssid.substring(1, wifiInfo.getSSID().length() - 1));
+                    }
+                    else {
+                        ssid_et.setText(ssid);
+                    }
 
                     int sec = wifiInfo.getCurrentSecurityType();
                     switch (sec) {
