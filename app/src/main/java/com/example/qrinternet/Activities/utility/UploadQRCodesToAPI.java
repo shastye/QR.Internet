@@ -17,14 +17,12 @@ import okhttp3.MultipartBody;
 
 public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
     private String filename;
-    private byte[] data;
 
     private int responseCode;
     private JSONObject errorDetails;
 
-    public UploadQRCodesToAPI(String _filename, byte[] _binaryData) {
+    public UploadQRCodesToAPI(String _filename) {
         filename = _filename;
-        data = _binaryData;
     }
 
     @Override

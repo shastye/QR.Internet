@@ -81,7 +81,7 @@ public class SaveQRCodeFragment extends Fragment {
                 if (Tags.NUM_SAVED_QRCODES <= 5) {
                     boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, createAndSaveViewModel.getBitmap());
                     if (saved) {
-                        uploadQRcode = new UploadQRCodesToAPI(filename, createAndSaveViewModel.getBinaryData());
+                        uploadQRcode = new UploadQRCodesToAPI(filename);
                         uploadQRcode.execute();
                         try {
                             uploadQRcode.get();
