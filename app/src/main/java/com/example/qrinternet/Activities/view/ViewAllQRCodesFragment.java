@@ -2,7 +2,6 @@ package com.example.qrinternet.Activities.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.utility.ListAllQRCodesFromAPI;
+import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.utility.SendEmailDialogFragment;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewAllQrCodesBinding;
@@ -66,7 +66,7 @@ public class ViewAllQRCodesFragment extends Fragment {
 
             for (int i = 0; i < viewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
                 ImageDetails image = viewAndDeleteViewModel.getImagesFromAPI().get(i);
-                Bitmap bitmap = BitmapFactory.decodeFile(image.source);
+                Bitmap bitmap = Methods.convertToBitmap(image.source);
                 viewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
         }

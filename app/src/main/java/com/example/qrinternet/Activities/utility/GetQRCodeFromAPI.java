@@ -1,7 +1,6 @@
 package com.example.qrinternet.Activities.utility;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,9 +11,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 
 public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
     private byte[] binaryData;
@@ -104,8 +100,21 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
             // Create QR Code as bitmap
             if (responseCode == 200) {
                 binaryData = response.body().bytes();
-                InputStream inputStream = new ByteArrayInputStream(binaryData);
-                bitmap = BitmapFactory.decodeStream(inputStream);
+                bitmap = Methods.convertToBitmap(binaryData);
+
+                if (bitmap == null) {
+                    responseCode = 102;
+
+                    String json = "{\"detail\":\"Bitmap could not be decoded.\"}";
+                    try {
+                        errorDetails = new JSONObject(json);
+                        Log.e("JSON", errorDetails.toString());
+                    } catch (Throwable t) {
+                        Log.e("JSONObject", "Could not parse JSON");
+                    }
+
+                    return null;
+                }
             }
 
             return 0L;
