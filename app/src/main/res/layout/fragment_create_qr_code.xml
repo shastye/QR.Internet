@@ -46,7 +46,9 @@
         app:layout_constraintBottom_toTopOf="@+id/password_editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toEndOf="@+id/ssid_textView" />
+        app:layout_constraintStart_toEndOf="@+id/ssid_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/password_textView"
@@ -73,7 +75,9 @@
         app:layout_constraintBottom_toTopOf="@+id/security_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.01"
-        app:layout_constraintStart_toEndOf="@+id/password_textView" />
+        app:layout_constraintStart_toEndOf="@+id/password_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/security_textView"
@@ -99,10 +103,12 @@
         android:entries="@array/security_codes"
         android:spinnerMode="dropdown"
         android:textSize="20sp"
-        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintBottom_toTopOf="@+id/hidden_checkBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/security_textView" />
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toEndOf="@+id/security_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/hidden_textView"
@@ -127,7 +133,9 @@
         app:layout_constraintBottom_toTopOf="@+id/CreateQRCode_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.45"
-        app:layout_constraintStart_toEndOf="@+id/hidden_textView" />
+        app:layout_constraintStart_toEndOf="@+id/hidden_textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/CreateQRCode_button"
@@ -152,4 +160,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:checked="false" />
+
+    <TextView
+        android:id="@+id/caseSensitive_textEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Caution: Both SSID and Password are CASE SENSITIVE"
+        android:textAlignment="center"
+        android:textColor="@color/purple_500"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/ssid_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/useLocalWifi_switch" />
 </androidx.constraintlayout.widget.ConstraintLayout>
