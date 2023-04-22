@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
 import com.example.qrinternet.Activities.utility.Methods;
+import com.example.qrinternet.Activities.utility.OverwriteExistingImageDialogFragment;
 import com.example.qrinternet.Activities.utility.SavedLimitReachedDialogFragment;
 import com.example.qrinternet.Activities.utility.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
@@ -26,6 +27,7 @@ import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -78,39 +80,43 @@ public class SaveQRCodeFragment extends Fragment {
                     filename = filename + ".png";
                 }
 
-                if (Tags.NUM_SAVED_QRCODES <= 5) {
-                    boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, createAndSaveViewModel.getBitmap());
-                    if (saved) {
-                        uploadQRcode = new UploadQRCodesToAPI(filename);
-                        uploadQRcode.execute();
-                        try {
-                            uploadQRcode.get();
-                        } catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                if (new File(Tags.SAVE_PATH, filename).exists()) {
+                    DialogFragment overwriteDialog = new OverwriteExistingImageDialogFragment(filename);
+                    overwriteDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
+                }
+                else {
+                    if (Tags.NUM_SAVED_QRCODES <= 5) {
+                        boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, createAndSaveViewModel.getBitmap());
+                        if (saved) {
+                            uploadQRcode = new UploadQRCodesToAPI(filename);
+                            uploadQRcode.execute();
+                            try {
+                                uploadQRcode.get();
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
 
-                        if (uploadQRcode.getResponseCode() == 200) {
-                            DialogFragment savedImage = new ImageSavedDialogFragment();
-                            savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                            if (uploadQRcode.getResponseCode() == 200) {
+                                DialogFragment savedImage = new ImageSavedDialogFragment();
+                                savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                            } else {
+                                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+
+                                DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
+                                errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                            }
                         } else {
                             Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 
-                            DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
+                            DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
                             errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                         }
-                    }
-                    else {
+                    } else {
                         Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 
-                        DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
-                        errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                        DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
+                        saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
-                }
-                else {
-                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
-                    DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
-                    saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                 }
             }
         });
