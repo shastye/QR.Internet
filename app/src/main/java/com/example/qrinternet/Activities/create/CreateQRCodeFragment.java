@@ -1,8 +1,6 @@
 package com.example.qrinternet.Activities.create;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -18,15 +16,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
-import com.example.qrinternet.Activities.utility.SendEmailDialogFragment;
+import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.api.GetQRCodeFromAPI;
+import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentCreateQrCodeBinding;
 import com.google.android.material.switchmaterial.SwitchMaterial;

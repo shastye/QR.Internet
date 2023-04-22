@@ -1,8 +1,11 @@
-package com.example.qrinternet.Activities.utility;
+package com.example.qrinternet.Activities.api;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.qrinternet.Activities.utility.Methods;
+import com.example.qrinternet.Activities.utility.Tags;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

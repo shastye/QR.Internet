@@ -16,14 +16,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.qrinternet.Activities.utility.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.utility.ImageSavedDialogFragment;
+import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.dialogs.ImageSavedDialogFragment;
 import com.example.qrinternet.Activities.utility.Methods;
-import com.example.qrinternet.Activities.utility.OverwriteExistingImageDialogFragment;
-import com.example.qrinternet.Activities.utility.SavedLimitReachedDialogFragment;
-import com.example.qrinternet.Activities.utility.SendEmailDialogFragment;
+import com.example.qrinternet.Activities.dialogs.OverwriteExistingImageDialogFragment;
+import com.example.qrinternet.Activities.dialogs.SavedLimitReachedDialogFragment;
+import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
-import com.example.qrinternet.Activities.utility.UploadQRCodesToAPI;
+import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
 

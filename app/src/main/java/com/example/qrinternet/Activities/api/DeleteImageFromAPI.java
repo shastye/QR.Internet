@@ -1,35 +1,37 @@
-package com.example.qrinternet.Activities.utility;
+package com.example.qrinternet.Activities.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Tags;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Vector;
+import java.io.File;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
+public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
 
     private int responseCode;
     private JSONObject errorDetails;
-    private JSONArray responseArray;
-    private Vector<ImageDetails> imagesFromAPI;
+    private ImageDetails qrCode;
+
+    public DeleteImageFromAPI(ImageDetails _qrCode) {
+        qrCode = _qrCode;
+    }
 
     @Override
     protected Long doInBackground(String... strings) {
         try {
-
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("https://qrcode3.p.rapidapi.com/images")
-                    .get()
+                    .url("https://qrcode3.p.rapidapi.com/images/" + qrCode.id)
+                    .delete(null)
                     .addHeader("X-RapidAPI-Key", Tags.API_KEY)
                     .addHeader("X-RapidAPI-Host", "qrcode3.p.rapidapi.com")
                     .build();
@@ -38,7 +40,7 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
 
             // Error Checking
             responseCode = response.code();
-            if (responseCode != 200) {
+            if (responseCode != 204) {
                 String json = response.body().string();
                 try {
                     errorDetails = new JSONObject(json);
@@ -51,29 +53,41 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
                 Log.e("Response Body string", json);
             }
 
-
-
-            // Create List of Image Data
-            if (responseCode == 200) {
-                String json = response.body().string();
+            // Delete QR Code from device
+            if (responseCode == 204) {
                 try {
-                    responseArray = new JSONArray(json);
+                    File file = new File(qrCode.source);
+                    if (!file.delete()) {
+                        responseCode = 104;
+
+                        String json = "{\"detail\":\"" + "image not deleted" + "\"}";
+                        try {
+                            errorDetails = new JSONObject(json);
+                            Log.e("JSON", errorDetails.toString());
+                        } catch (Throwable t) {
+                            Log.e("JSONObject", "Could not parse JSON");
+                        }
+
+                        return null;
+                    }
                 } catch (Exception e) {
-                    Log.e("OOPS", "List is probably empty");
-                }
+                    responseCode = 0;
 
-                imagesFromAPI = new Vector<ImageDetails>(responseArray.length());
-                for (int i =0; i < responseArray.length(); i++) {
-                    Gson gson = new Gson();
-                    JSONObject temp = responseArray.getJSONObject(i);
+                    String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
+                    try {
+                        errorDetails = new JSONObject(json);
+                        Log.e("JSON", errorDetails.toString());
+                    } catch (Throwable t) {
+                        Log.e("JSONObject", "Could not parse JSON");
+                    }
 
-                    ImageDetails image = gson.fromJson(temp.toString(), ImageDetails.class);
-                    imagesFromAPI.add(image);
+                    return null;
                 }
             }
 
             return 0L;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             responseCode = 0;
 
             String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
@@ -100,8 +114,5 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
     }
     public JSONObject getErrorDetails() {
         return errorDetails;
-    }
-    public Vector<ImageDetails> getImagesFromAPI() {
-        return imagesFromAPI;
     }
 }

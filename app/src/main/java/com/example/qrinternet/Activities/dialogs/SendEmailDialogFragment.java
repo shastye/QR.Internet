@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.utility;
+package com.example.qrinternet.Activities.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 
 public class SendEmailDialogFragment extends DialogFragment {

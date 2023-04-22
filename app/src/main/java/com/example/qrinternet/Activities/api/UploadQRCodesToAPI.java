@@ -1,34 +1,47 @@
-package com.example.qrinternet.Activities.utility;
+package com.example.qrinternet.Activities.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.qrinternet.Activities.utility.Tags;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import org.json.JSONObject;
 
 import java.io.File;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.MultipartBody;
 
-public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
+public class UploadQRCodesToAPI extends AsyncTask<String, Void, Long> {
+    private String filename;
 
     private int responseCode;
     private JSONObject errorDetails;
-    private ImageDetails qrCode;
 
-    public DeleteImageFromAPI(ImageDetails _qrCode) {
-        qrCode = _qrCode;
+    public UploadQRCodesToAPI(String _filename) {
+        filename = _filename;
     }
 
     @Override
     protected Long doInBackground(String... strings) {
         try {
+            File fileInput = new File(Tags.SAVE_PATH, filename);
             OkHttpClient client = new OkHttpClient();
 
+            RequestBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("image", Tags.SAVE_PATH + filename,
+                            RequestBody.create(fileInput, MediaType.parse("image/png")))
+                    .build();
+
             Request request = new Request.Builder()
-                    .url("https://qrcode3.p.rapidapi.com/images/" + qrCode.id)
-                    .delete(null)
+                    .url("https://qrcode3.p.rapidapi.com/images")
+                    .post(body)
                     .addHeader("X-RapidAPI-Key", Tags.API_KEY)
                     .addHeader("X-RapidAPI-Host", "qrcode3.p.rapidapi.com")
                     .build();
@@ -37,7 +50,7 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
 
             // Error Checking
             responseCode = response.code();
-            if (responseCode != 204) {
+            if (responseCode != 200) {
                 String json = response.body().string();
                 try {
                     errorDetails = new JSONObject(json);
@@ -50,41 +63,8 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
                 Log.e("Response Body string", json);
             }
 
-            // Delete QR Code from device
-            if (responseCode == 204) {
-                try {
-                    File file = new File(qrCode.source);
-                    if (!file.delete()) {
-                        responseCode = 104;
-
-                        String json = "{\"detail\":\"" + "image not deleted" + "\"}";
-                        try {
-                            errorDetails = new JSONObject(json);
-                            Log.e("JSON", errorDetails.toString());
-                        } catch (Throwable t) {
-                            Log.e("JSONObject", "Could not parse JSON");
-                        }
-
-                        return null;
-                    }
-                } catch (Exception e) {
-                    responseCode = 0;
-
-                    String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
-                    try {
-                        errorDetails = new JSONObject(json);
-                        Log.e("JSON", errorDetails.toString());
-                    } catch (Throwable t) {
-                        Log.e("JSONObject", "Could not parse JSON");
-                    }
-
-                    return null;
-                }
-            }
-
             return 0L;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             responseCode = 0;
 
             String json = "{\"detail\":\"" + e.getMessage().toString() + "\"}";
@@ -105,7 +85,6 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
         // TODO: check this.exception
         // TODO: do something with the feed
     }
-
     public int getResponseCode() {
         return responseCode;
     }
