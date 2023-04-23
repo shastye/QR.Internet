@@ -235,6 +235,10 @@ public class CreateQRCodeFragment extends Fragment {
             sendEmailDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
             return true;
         }
+        else if (item.getItemId() == R.id.toolbar_login) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_create_to_navigation_login);
+            return true;
+        }
 
         return false;
     }

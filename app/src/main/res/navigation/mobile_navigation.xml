@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navigation_create_to_navigation_instructions"
             app:destination="@id/navigation_instructions" />
+        <action
+            android:id="@+id/action_navigation_create_to_navigation_login"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment
@@ -35,6 +38,9 @@
         <action
             android:id="@+id/action_navigation_viewAll_to_navigation_instructions"
             app:destination="@id/navigation_instructions" />
+        <action
+            android:id="@+id/action_navigation_viewAll_to_navigation_login"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment
@@ -48,6 +54,9 @@
         <action
             android:id="@+id/action_navigation_viewSaved_to_navigation_instructions"
             app:destination="@id/navigation_instructions" />
+        <action
+            android:id="@+id/action_navigation_viewSaved_to_navigation_login"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment
@@ -58,6 +67,9 @@
         <action
             android:id="@+id/action_navigation_save_to_navigation_instructions"
             app:destination="@id/navigation_instructions" />
+        <action
+            android:id="@+id/action_navigation_save_to_navigation_login"
+            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment
@@ -65,5 +77,25 @@
         android:name="com.example.qrinternet.Activities.utility.InstructionsFragment"
         android:label="Instructions"
         tools:layout="@layout/fragment_instructions" />
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.qrinternet.Activities.login.LogInFragment"
+        android:label="Log In"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_signup"
+            app:destination="@id/navigation_signup" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_signup"
+        android:name="com.example.qrinternet.Activities.login.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_signup" >
+        <action
+            android:id="@+id/action_navigation_signup_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
 
 </navigation>

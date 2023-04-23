@@ -3,6 +3,9 @@
     android:id="@+id/toolbar_menu">
 
     <item
+        android:id="@+id/toolbar_login"
+        android:title="Log In" />
+    <item
         android:id="@+id/toolar_instructions"
         android:title="Instructions" />
     <item
