@@ -5,4 +5,5 @@ public class ImageDetails {
     public String source;
     public int size;
     public String created;
+    public byte[] binaryData;
 }

@@ -9,12 +9,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.qrinternet.Activities.dialogs.AccountAlreadyExistsDialogFragment;
+import com.example.qrinternet.Activities.dialogs.AccountCreatedDialogFragment;
+import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
+import com.example.qrinternet.Activities.roomsupplies.AppDatabase;
+import com.example.qrinternet.Activities.roomsupplies.User;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSignupBinding;
+
+import java.util.Objects;
 
 public class SignUpFragment extends Fragment {
     private FragmentSignupBinding binding;
@@ -46,9 +54,43 @@ public class SignUpFragment extends Fragment {
                 username = un_et.getText().toString();
                 password = pw_et.getText().toString();
 
-                // TODO: Query database
-                //      Search first for email to see if account exists (new dialog)
-                //      Then add to database
+                final User[] temp = new User[1];
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        temp[0] = AppDatabase.getInstance(root.getContext()).userDao().getUser(username);
+                    }
+                });
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (temp[0] == null) {
+                    t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AppDatabase.getInstance(root.getContext()).userDao().insertUser(new User(username, password));
+                        }
+                    });
+                    t.start();
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    DialogFragment savedImage = new AccountCreatedDialogFragment();
+                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Created Message");
+
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_signup_to_navigation_login);
+                }
+                else {
+                    DialogFragment savedImage = new AccountAlreadyExistsDialogFragment();
+                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Exists Message");
+                }
             }
         });
 
