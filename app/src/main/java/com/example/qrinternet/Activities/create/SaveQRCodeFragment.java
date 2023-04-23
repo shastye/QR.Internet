@@ -56,7 +56,7 @@ public class SaveQRCodeFragment extends Fragment {
         fn_et.setText("");
         Button saveQRbutton = (Button) root.findViewById(R.id.SaveQRCode_button);
 
-        qrCode.setImageBitmap(createAndSaveViewModel.getBitmap());
+        qrCode.setImageBitmap(CreateAndSaveViewModel.getBitmap());
 
         setHasOptionsMenu(true);
 
@@ -86,7 +86,7 @@ public class SaveQRCodeFragment extends Fragment {
                 }
                 else {
                     if (Tags.NUM_SAVED_QRCODES <= 5) {
-                        boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, createAndSaveViewModel.getBitmap());
+                        boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, CreateAndSaveViewModel.getBitmap());
                         if (saved) {
                             uploadQRcode = new UploadQRCodesToAPI(filename);
                             uploadQRcode.execute();

@@ -22,17 +22,17 @@ public class CreateAndSaveViewModel extends ViewModel {
         return mText;
     }
 
-    public Bitmap getBitmap() {
+    public static Bitmap getBitmap() {
         return bitmap;
     }
-    public byte[] getBinaryData() {
+    public static byte[] getBinaryData() {
         return binaryData;
     }
 
-    public void setBitmap(Bitmap _bitmap) {
+    public static void setBitmap(Bitmap _bitmap) {
         bitmap = _bitmap;
     }
-    public void setBinaryData(byte[] _binaryData) {
+    public static void setBinaryData(byte[] _binaryData) {
         binaryData = _binaryData;
     }
 }

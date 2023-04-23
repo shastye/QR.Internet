@@ -61,13 +61,13 @@ public class ViewAllQRCodesFragment extends Fragment {
         }
 
         if (listAllQRCodes.getResponseCode() == 200) {
-            viewAndDeleteViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
-            viewAndDeleteViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
+            ViewAndDeleteViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
+            ViewAndDeleteViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
 
-            for (int i = 0; i < viewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
-                ImageDetails image = viewAndDeleteViewModel.getImagesFromAPI().get(i);
+            for (int i = 0; i < ViewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
+                ImageDetails image = ViewAndDeleteViewModel.getImagesFromAPI().get(i);
                 Bitmap bitmap = Methods.convertToBitmap(image.source);
-                viewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
+                ViewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
         }
         else {
@@ -85,7 +85,7 @@ public class ViewAllQRCodesFragment extends Fragment {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                viewAndDeleteViewModel.setPositionOfGrid(position);
+                ViewAndDeleteViewModel.setPositionOfGrid(position);
                 Navigation.findNavController(root).navigate(R.id.action_navigation_viewAll_to_navigation_viewSaved);
             }
         });

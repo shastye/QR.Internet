@@ -34,13 +34,13 @@ import java.util.concurrent.ExecutionException;
 public class CreateQRCodeFragment extends Fragment {
 
     private FragmentCreateQrCodeBinding binding;
+    CreateAndSaveViewModel createAndSaveViewModel;
 
     GetQRCodeFromAPI getQRcode;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        CreateAndSaveViewModel createAndSaveViewModel =
-                new ViewModelProvider(this).get(CreateAndSaveViewModel.class);
+        createAndSaveViewModel = new ViewModelProvider(this).get(CreateAndSaveViewModel.class);
 
         binding = FragmentCreateQrCodeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -118,6 +118,7 @@ public class CreateQRCodeFragment extends Fragment {
                         case WifiInfo.SECURITY_TYPE_UNKNOWN:
                         case WifiInfo.SECURITY_TYPE_WAPI_CERT:
                         case WifiInfo.SECURITY_TYPE_WAPI_PSK:
+                        case WifiInfo.SECURITY_TYPE_DPP:
                         default:
                             sec_s.setSelection(0);
                             break;
@@ -177,8 +178,8 @@ public class CreateQRCodeFragment extends Fragment {
                     }
 
                     if (getQRcode.getResponseCode() == 200) {
-                        createAndSaveViewModel.setBitmap(getQRcode.getBitmap());
-                        createAndSaveViewModel.setBinaryData(getQRcode.getBinaryData());
+                        CreateAndSaveViewModel.setBitmap(getQRcode.getBitmap());
+                        CreateAndSaveViewModel.setBinaryData(getQRcode.getBinaryData());
 
                         Navigation.findNavController(root).navigate(R.id.action_navigation_create_to_navigation_save);
                     }
