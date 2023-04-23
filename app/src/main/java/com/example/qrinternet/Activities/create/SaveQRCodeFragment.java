@@ -64,7 +64,6 @@ public class SaveQRCodeFragment extends Fragment {
         {
             @Override
             public void onClick(View v) {
-                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
 
                 String filename = fn_et.getText().toString();
                 filename = filename.trim();
@@ -99,21 +98,17 @@ public class SaveQRCodeFragment extends Fragment {
                             if (uploadQRcode.getResponseCode() == 200) {
                                 DialogFragment savedImage = new ImageSavedDialogFragment();
                                 savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
-                            } else {
-                                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 
+                                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
+                            } else {
                                 DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
                                 errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                             }
                         } else {
-                            Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
                             DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
                             errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                         }
                     } else {
-                        Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
                         DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
                         saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
