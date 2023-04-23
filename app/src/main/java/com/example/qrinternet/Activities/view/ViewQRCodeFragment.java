@@ -59,8 +59,6 @@ public class ViewQRCodeFragment extends Fragment {
         deleteQRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
-
                 ImageDetails qrCode = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid());
                 deleteQRCode = new DeleteImageFromAPI(qrCode);
                 deleteQRCode.execute();
@@ -74,10 +72,10 @@ public class ViewQRCodeFragment extends Fragment {
                     DialogFragment savedImage = new ImageDeletedDialogFragment();
                     savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Deleted Message");
 
+                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+
                     Navigation.findNavController(root).navigate(R.id.action_navigation_viewSaved_to_navigation_notifications);
                 } else {
-                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
-
                     DialogFragment errorDialog = new ErrorCodeDialogFragment(deleteQRCode.getResponseCode(), deleteQRCode.getErrorDetails());
                     errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                 }
