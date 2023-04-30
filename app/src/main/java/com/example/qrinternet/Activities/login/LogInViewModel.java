@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel;
 public class LogInViewModel extends ViewModel {
     private final MutableLiveData<String> mText;
 
+    public static String username;
+    public static String password;
+
     public LogInViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("");

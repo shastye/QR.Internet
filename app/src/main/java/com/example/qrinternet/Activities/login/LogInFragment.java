@@ -31,9 +31,6 @@ public class LogInFragment extends Fragment {
     private FragmentLoginBinding binding;
     LogInViewModel logInViewModel;
 
-    String username;
-    String password;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         logInViewModel = new ViewModelProvider(this).get(LogInViewModel.class);
@@ -55,10 +52,10 @@ public class LogInFragment extends Fragment {
         li_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = un_et.getText().toString();
-                password = pw_et.getText().toString();
+                LogInViewModel.username = un_et.getText().toString();
+                LogInViewModel.password = pw_et.getText().toString();
 
-                Tags.AUTH.signInWithEmailAndPassword(username, password)
+                Tags.AUTH.signInWithEmailAndPassword(LogInViewModel.username, LogInViewModel.password)
                         .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -82,8 +79,7 @@ public class LogInFragment extends Fragment {
         fp_cet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Open dialog or new fragment to change password
-                //      then update database
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_login_to_navigation_resetPassword);
             }
         });
 
@@ -114,5 +110,11 @@ public class LogInFragment extends Fragment {
         if (currentUser != null){
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_login_to_navigation_create);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

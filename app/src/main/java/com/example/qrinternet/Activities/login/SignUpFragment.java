@@ -38,9 +38,6 @@ public class SignUpFragment extends Fragment {
     private FragmentSignupBinding binding;
     LogInViewModel logInViewModel;
 
-    String username;
-    String password;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         logInViewModel = new ViewModelProvider(this).get(LogInViewModel.class);
@@ -61,18 +58,18 @@ public class SignUpFragment extends Fragment {
         li_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = un_et.getText().toString();
-                password = pw_et.getText().toString();
+                LogInViewModel.username = un_et.getText().toString();
+                LogInViewModel.password = pw_et.getText().toString();
 
-                Tags.AUTH.createUserWithEmailAndPassword(username, password)
+                Tags.AUTH.createUserWithEmailAndPassword(LogInViewModel.username, LogInViewModel.password)
                         .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    User user = new User(username, password);
+                                    User user = new User(LogInViewModel.username);
 
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    db.collection("users").document(username)
+                                    db.collection("users").document(LogInViewModel.username)
                                             .set(user.getHashMap())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -139,5 +136,11 @@ public class SignUpFragment extends Fragment {
         navBar.setVisibility(View.INVISIBLE);
 
         Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
