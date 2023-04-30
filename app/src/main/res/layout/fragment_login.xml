@@ -66,12 +66,12 @@
         android:id="@+id/loginUsername_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" Username: "
+        android:text=" Email: "
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginTitle_editText" />
 
@@ -79,7 +79,7 @@
         android:id="@+id/loginUsername_editText"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:hint="Username"
+        android:hint="Email"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
         app:layout_constraintEnd_toEndOf="parent"
