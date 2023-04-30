@@ -13,6 +13,10 @@ public class Image {
     private String source;
     private byte[] binaryData;
 
+    public Image() {
+        source = "noname.png";
+        binaryData = new byte[7605];
+    }
     public Image(String _filename, byte[] _binaryData) {
         source = _filename;
         binaryData = _binaryData;
@@ -28,6 +32,9 @@ public class Image {
             temp_i.add(b == null ? null : b.intValue());
         }
         return temp_i;
+    }
+    public byte[] getRawData() {
+        return binaryData;
     }
 
     public void setSource(String _source) {

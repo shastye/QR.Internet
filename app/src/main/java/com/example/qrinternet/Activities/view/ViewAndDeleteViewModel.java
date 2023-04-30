@@ -27,20 +27,20 @@ public class ViewAndDeleteViewModel extends ViewModel {
         return mText;
     }
 
-    public static Vector<Image> getImagesFromAPI() {
+    public static Vector<Image> getImages() {
         return imagesFromAPI;
     }
-    public static Vector<Bitmap> getBitmapsOfQRCodes() {
+    public static Vector<Bitmap> getBitmaps() {
         return bitmapsOfQRCodes;
     }
     public static int getPositionOfGrid() {
         return positionOfGrid;
     }
 
-    public static void setImagesFromAPI(Vector<Image> _imagesFromAPI){
+    public static void setImages(Vector<Image> _imagesFromAPI){
         imagesFromAPI = _imagesFromAPI;
     }
-    public static void setBitmapsOfQRCodes(Vector<Bitmap> _bitmapsOfQRCodes) {
+    public static void setBitmaps(Vector<Bitmap> _bitmapsOfQRCodes) {
         bitmapsOfQRCodes = _bitmapsOfQRCodes;
     }
     public static void setPositionOfGrid(int _positionOfGrid) {

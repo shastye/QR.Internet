@@ -3,6 +3,7 @@ package com.example.qrinternet.Activities.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,23 +23,31 @@ import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.utility.Image;
-import com.example.qrinternet.Activities.api.ListAllQRCodesFromAPI;
 import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewAllQrCodesBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.json.JSONObject;
 
 import java.util.Objects;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
 public class ViewAllQRCodesFragment extends Fragment {
 
     private FragmentViewAllQrCodesBinding binding;
-
-    ListAllQRCodesFromAPI listAllQRCodes;
     ViewAndDeleteViewModel viewAndDeleteViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,34 +64,54 @@ public class ViewAllQRCodesFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        listAllQRCodes = new ListAllQRCodesFromAPI();
-        listAllQRCodes.execute();
-        try {
-            listAllQRCodes.get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (listAllQRCodes.getResponseCode() == 200) {
-            ViewAndDeleteViewModel.setImagesFromAPI(listAllQRCodes.getImagesFromAPI());
-            ViewAndDeleteViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
-
-            for (int i = 0; i < ViewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
-                Image image = ViewAndDeleteViewModel.getImagesFromAPI().get(i);
-                Bitmap bitmap = Methods.convertToBitmap(image.getSource());
-                ViewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
+        final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
+        String email = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
+        CollectionReference query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Tags.NUM_SAVED_QRCODES = (int) snapshot.getCount();
+                } else {
+                    Tags.NUM_SAVED_QRCODES = 0;
+                }
             }
-        }
-        else {
-            DialogFragment errorDialog = new ErrorCodeDialogFragment(listAllQRCodes.getResponseCode(), listAllQRCodes.getErrorDetails());
-            errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-        }
+        });
 
-
-
-
+        ViewAndDeleteViewModel.setImages(new Vector<Image>(Tags.NUM_SAVED_QRCODES));
+        ViewAndDeleteViewModel.setBitmaps(new Vector<Bitmap>(Tags.NUM_SAVED_QRCODES));
         GridView gridView = (GridView) root.findViewById(R.id.qrcode_gridView);
-        gridView.setAdapter(new QRAdapter());
+
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Image temp = document.toObject(Image.class);
+                                ViewAndDeleteViewModel.getImages().add(temp);
+                                ViewAndDeleteViewModel.getBitmaps().add(Methods.convertToBitmap(temp.getRawData()));
+                            }
+
+                            gridView.setAdapter(new QRAdapter());
+                        } else {
+                            String json = "{\"detail\":\"" + Objects.requireNonNull(task.getException()).getMessage() + "\"}";
+                            JSONObject errorDetails = null;
+                            try {
+                                errorDetails = new JSONObject(json);
+                                Log.e("JSON", errorDetails.toString());
+                            } catch (Throwable t) {
+                                Log.e("JSONObject", "Could not parse JSON");
+                            }
+
+                            DialogFragment df = new ErrorCodeDialogFragment(102, errorDetails);
+                            df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                        }
+
+                    }
+                });
 
 
 
@@ -141,12 +170,12 @@ public class ViewAllQRCodesFragment extends Fragment {
     public class QRAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return viewAndDeleteViewModel.getImagesFromAPI().size();
+            return ViewAndDeleteViewModel.getImages().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return viewAndDeleteViewModel.getImagesFromAPI().get(position);
+            return ViewAndDeleteViewModel.getImages().get(position);
         }
 
         @Override
@@ -156,18 +185,16 @@ public class ViewAllQRCodesFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Image image = viewAndDeleteViewModel.getImagesFromAPI().get(position);
+            Image image = ViewAndDeleteViewModel.getImages().get(position);
 
             LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View image_view = inflater.inflate(R.layout.image_qr_entry, null);
 
             ImageView image_imageView = image_view.findViewById(R.id.gridChild_imageView);
-            image_imageView.setImageBitmap(viewAndDeleteViewModel.getBitmapsOfQRCodes().get(position));
+            image_imageView.setImageBitmap(ViewAndDeleteViewModel.getBitmaps().get(position));
 
             TextView image_textView = image_view.findViewById(R.id.gridChild_textView);
-            int lastIndex = image.getSource().lastIndexOf('/');
-            String name = image.getSource().substring(lastIndex + 1);
-            image_textView.setText(name);
+            image_textView.setText(image.getSource());
 
             return image_view;
         }

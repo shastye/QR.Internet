@@ -50,10 +50,10 @@ public class ViewQRCodeFragment extends Fragment {
         // ADDITIONS ADDED BETWEEN COMMENTS
 
         ImageView viewSavedQRCode = (ImageView) root.findViewById(R.id.ViewSavedQRCode_imageView);
-        viewSavedQRCode.setImageBitmap(ViewAndDeleteViewModel.getBitmapsOfQRCodes().get(ViewAndDeleteViewModel.getPositionOfGrid()));
+        viewSavedQRCode.setImageBitmap(ViewAndDeleteViewModel.getBitmaps().get(ViewAndDeleteViewModel.getPositionOfGrid()));
         TextView viewSavedText = (TextView) root.findViewById(R.id.savedFilename_textView);
-        int lastIndex = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().lastIndexOf('/');
-        String name = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().substring(lastIndex + 1);
+        int lastIndex = ViewAndDeleteViewModel.getImages().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().lastIndexOf('/');
+        String name = ViewAndDeleteViewModel.getImages().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().substring(lastIndex + 1);
         viewSavedText.setText(name);
 
         Button deleteQRButton = (Button) root.findViewById(R.id.deleteQRCode_button);
@@ -61,7 +61,7 @@ public class ViewQRCodeFragment extends Fragment {
         deleteQRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Image qrCode = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid());
+                Image qrCode = ViewAndDeleteViewModel.getImages().get(ViewAndDeleteViewModel.getPositionOfGrid());
                 deleteQRCode = new DeleteImageFromAPI(qrCode);
                 deleteQRCode.execute();
                 try {

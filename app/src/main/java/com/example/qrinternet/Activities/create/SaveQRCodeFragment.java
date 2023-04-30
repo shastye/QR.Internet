@@ -34,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -61,7 +62,7 @@ public class SaveQRCodeFragment extends Fragment {
 
         final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
         String email = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
-        Query query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
+        CollectionReference query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
         AggregateQuery countQuery = query.count();
         countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
             @Override
@@ -106,7 +107,7 @@ public class SaveQRCodeFragment extends Fragment {
 
                 final boolean[] imageExists = {false};
                 db[0] = FirebaseFirestore.getInstance();
-                DocumentReference image = db[0].collection("users").document(email).collection("images").document(finalFilename);
+                DocumentReference image = query.document(finalFilename);
                 image.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
