@@ -8,5 +8,8 @@
     <item
         android:id="@+id/toolbar_contactCustomerSupport"
         android:title="Contact Customer Support" />
+    <item
+        android:id="@+id/toolbar_signOut"
+        android:title="Sign Out" />
 
 </menu>

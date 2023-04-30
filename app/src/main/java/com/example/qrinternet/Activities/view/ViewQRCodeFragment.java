@@ -116,6 +116,10 @@ public class ViewQRCodeFragment extends Fragment {
             sendEmailDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
             return true;
         }
+        else if (item.getItemId() == R.id.toolbar_signOut) {
+            Tags.AUTH.signOut();
+            return true;
+        }
 
         return false;
     }

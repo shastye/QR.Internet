@@ -24,6 +24,7 @@ import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.api.ListAllQRCodesFromAPI;
 import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewAllQrCodesBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -123,6 +124,10 @@ public class ViewAllQRCodesFragment extends Fragment {
         else if (item.getItemId() == R.id.toolbar_contactCustomerSupport) {
             DialogFragment sendEmailDialog = new SendEmailDialogFragment();
             sendEmailDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+            return true;
+        }
+        else if (item.getItemId() == R.id.toolbar_signOut) {
+            Tags.AUTH.signOut();
             return true;
         }
 
