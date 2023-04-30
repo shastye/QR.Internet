@@ -86,9 +86,6 @@ public class SignUpFragment extends Fragment {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    // TODO: CREATE CORRECT DIALOG
-                                                    //      new database entry not made
-
                                                     String json = "{\"detail\":\"" + e.getMessage() + "\"}";
                                                     JSONObject errorDetails = null;
                                                     try {
@@ -103,8 +100,17 @@ public class SignUpFragment extends Fragment {
                                                 }
                                             });
                                 } else {
-                                    // TODO: CREATE CORRECT DIALOG
-                                    //      new auth not made
+                                    String json = "{\"detail\":\"User could not be added to Firestore.\"}";
+                                    JSONObject errorDetails = null;
+                                    try {
+                                        errorDetails = new JSONObject(json);
+                                        Log.e("JSON", errorDetails.toString());
+                                    } catch (Throwable t) {
+                                        Log.e("JSONObject", "Could not parse JSON");
+                                    }
+
+                                    DialogFragment df = new ErrorCodeDialogFragment(500, errorDetails);
+                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "User Creation Error Message");
                                 }
                             }
                         });

@@ -94,7 +94,7 @@ public class ErrorCodeDialogFragment extends DialogFragment {
             message = message + "    Error Detail: Exception occurred during process with message: " +
                     details.toString();
         }
-        if (code == 100 || code == 104) {
+        else if (code == 100 || code == 104) {
             message = message;
         }
         else {
