@@ -71,11 +71,11 @@ public class SignUpFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     User user = new User(username, password);
-                                    db.collection("users")
-                                            .add(user.getHashMap())
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    db.collection("users").document(username)
+                                            .set(user.getHashMap())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(DocumentReference documentReference) {
+                                                public void onSuccess(Void aVoid) {
                                                     DialogFragment savedImage = new AccountCreatedDialogFragment();
                                                     savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Created Message");
 
