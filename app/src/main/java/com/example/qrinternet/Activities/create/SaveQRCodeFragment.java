@@ -1,6 +1,5 @@
 package com.example.qrinternet.Activities.create;
 
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Image;
-import com.example.qrinternet.Activities.utility.Methods;
-import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
-import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +31,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
@@ -45,15 +41,11 @@ import com.google.firebase.firestore.Query;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 public class SaveQRCodeFragment extends Fragment {
     private FragmentSaveQrCodeBinding binding;
     CreateAndSaveViewModel createAndSaveViewModel;
-
-    UploadQRCodesToAPI uploadQRcode;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
