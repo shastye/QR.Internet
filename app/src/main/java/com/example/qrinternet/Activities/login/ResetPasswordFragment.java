@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
@@ -20,6 +21,7 @@ import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.utility.User;
 import com.example.qrinternet.R;
+import com.example.qrinternet.databinding.FragmentLoginBinding;
 import com.example.qrinternet.databinding.FragmentResetPasswordBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +41,13 @@ public class ResetPasswordFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        logInViewModel = new ViewModelProvider(this).get(LogInViewModel.class);
+
+        binding = FragmentResetPasswordBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        final TextView textView = binding.textLogin;
+        logInViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
@@ -64,8 +72,17 @@ public class ResetPasswordFragment extends Fragment {
                                     Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_resetPassword_to_navigation_login);
                                 }
                                 else {
-                                    DialogFragment df = new StringDialogFragment("An error occurred and email was not sent.");
-                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Reset Password Message");
+                                    String json = "{\"detail\":\"" + Objects.requireNonNull(task.getException()).getMessage() + "\"}";
+                                    JSONObject errorDetails = null;
+                                    try {
+                                        errorDetails = new JSONObject(json);
+                                        Log.e("JSON", errorDetails.toString());
+                                    } catch (Throwable t) {
+                                        Log.e("JSONObject", "Could not parse JSON");
+                                    }
+
+                                    DialogFragment errorDialog = new ErrorCodeDialogFragment(0, errorDetails);
+                                    errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                                 }
                             }
                         });

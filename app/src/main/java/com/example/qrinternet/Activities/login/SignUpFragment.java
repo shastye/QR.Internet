@@ -97,7 +97,7 @@ public class SignUpFragment extends Fragment {
                                                 }
                                             });
                                 } else {
-                                    String json = "{\"detail\":\"User could not be added to Firestore.\"}";
+                                    String json = "{\"detail\":\"" + Objects.requireNonNull(task.getException()).getMessage() + ".\"}";
                                     JSONObject errorDetails = null;
                                     try {
                                         errorDetails = new JSONObject(json);
