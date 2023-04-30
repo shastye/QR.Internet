@@ -19,15 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.api.GetQRCodeFromAPI;
+import com.example.qrinternet.Activities.utility.GetQRCodeFromAPI;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
-import com.example.qrinternet.Activities.login.LogInFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentCreateQrCodeBinding;

@@ -1,4 +1,4 @@
-package com.example.qrinternet.Activities.api;
+package com.example.qrinternet.Activities.utility;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -48,7 +48,7 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
             "\r\n        \"hidden\": " + hidden +
             "\r\n    }," +
             "\r\n    \"image\": {" +
-            "\r\n        \"uri\": \"icon://appstore\"," +
+            "\r\n        \"uri\": \"icon://wifi\"," +
             "\r\n        \"modules\": true" +
             "\r\n    }," +
             "\r\n    \"style\": {" +
@@ -134,13 +134,6 @@ public class GetQRCodeFromAPI extends AsyncTask<String, Void, Long> {
 
             return null;
         }
-    }
-
-    protected void onPostExecute(Long feed) {
-        super.onPostExecute(feed);
-
-        // TODO: check this.exception
-        // TODO: do something with the feed
     }
 
     public Bitmap getBitmap() {
