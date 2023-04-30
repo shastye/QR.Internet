@@ -26,6 +26,7 @@ import com.example.qrinternet.Activities.api.GetQRCodeFromAPI;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentCreateQrCodeBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Objects;
@@ -195,6 +196,14 @@ public class CreateQRCodeFragment extends Fragment {
         // END ADDITIONS
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override

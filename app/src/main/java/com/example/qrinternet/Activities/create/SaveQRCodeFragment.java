@@ -28,6 +28,7 @@ import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.util.Objects;
@@ -125,6 +126,14 @@ public class SaveQRCodeFragment extends Fragment {
 
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override

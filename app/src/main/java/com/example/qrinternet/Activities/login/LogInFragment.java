@@ -20,6 +20,7 @@ import com.example.qrinternet.Activities.dialogs.IncorrectPasswordDialogFragment
 import com.example.qrinternet.Activities.dialogs.LogInSuccessfulDialogFragment;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentLoginBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
@@ -98,5 +99,13 @@ public class LogInFragment extends Fragment {
         // END ADDITIONS
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
     }
 }

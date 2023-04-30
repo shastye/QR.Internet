@@ -23,6 +23,7 @@ import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewQrCodeBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -88,6 +89,14 @@ public class ViewQRCodeFragment extends Fragment {
 
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
+        navBar.setVisibility(View.VISIBLE);
     }
 
     @Override

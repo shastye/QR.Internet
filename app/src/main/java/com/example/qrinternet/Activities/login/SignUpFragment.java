@@ -17,8 +17,13 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.dialogs.AccountAlreadyExistsDialogFragment;
 import com.example.qrinternet.Activities.dialogs.AccountCreatedDialogFragment;
 import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSignupBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthResult;
 
 import java.util.Objects;
 
@@ -83,5 +88,13 @@ public class SignUpFragment extends Fragment {
         // END ADDITIONS
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
+        navBar.setVisibility(View.INVISIBLE);
     }
 }
