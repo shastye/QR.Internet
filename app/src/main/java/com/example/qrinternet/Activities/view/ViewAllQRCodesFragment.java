@@ -128,6 +128,7 @@ public class ViewAllQRCodesFragment extends Fragment {
         }
         else if (item.getItemId() == R.id.toolbar_signOut) {
             Tags.AUTH.signOut();
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_viewAll_to_navigation_login);
             return true;
         }
 

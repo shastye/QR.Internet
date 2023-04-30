@@ -155,6 +155,7 @@ public class SaveQRCodeFragment extends Fragment {
         }
         else if (item.getItemId() == R.id.toolbar_signOut) {
             Tags.AUTH.signOut();
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_save_to_navigation_login);
             return true;
         }
 
