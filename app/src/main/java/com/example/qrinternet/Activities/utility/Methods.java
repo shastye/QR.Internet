@@ -23,17 +23,6 @@ public class Methods {
         }
     }
 
-    public static int CountNumberOfSavedImages(String _filepath) {
-        File directory = new File(_filepath);
-        if (directory.exists()) {
-            File[] files = directory.listFiles();
-            return files.length;
-        }
-        else {
-            return -1;
-        }
-    }
-
     public static Bitmap convertToBitmap(byte[] _binaryData) {
         InputStream inputStream = new ByteArrayInputStream(_binaryData);
         return BitmapFactory.decodeStream(inputStream);

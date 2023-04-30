@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Image;
 import com.example.qrinternet.Activities.api.ListAllQRCodesFromAPI;
 import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
@@ -68,8 +68,8 @@ public class ViewAllQRCodesFragment extends Fragment {
             ViewAndDeleteViewModel.setBitmapsOfQRCodes(new Vector<Bitmap>(5));
 
             for (int i = 0; i < ViewAndDeleteViewModel.getImagesFromAPI().size(); i++) {
-                ImageDetails image = ViewAndDeleteViewModel.getImagesFromAPI().get(i);
-                Bitmap bitmap = Methods.convertToBitmap(image.source);
+                Image image = ViewAndDeleteViewModel.getImagesFromAPI().get(i);
+                Bitmap bitmap = Methods.convertToBitmap(image.getSource());
                 ViewAndDeleteViewModel.getBitmapsOfQRCodes().add(bitmap);
             }
         }
@@ -156,7 +156,7 @@ public class ViewAllQRCodesFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageDetails image = viewAndDeleteViewModel.getImagesFromAPI().get(position);
+            Image image = viewAndDeleteViewModel.getImagesFromAPI().get(position);
 
             LayoutInflater inflater = (LayoutInflater) binding.getRoot().getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View image_view = inflater.inflate(R.layout.image_qr_entry, null);
@@ -165,8 +165,8 @@ public class ViewAllQRCodesFragment extends Fragment {
             image_imageView.setImageBitmap(viewAndDeleteViewModel.getBitmapsOfQRCodes().get(position));
 
             TextView image_textView = image_view.findViewById(R.id.gridChild_textView);
-            int lastIndex = image.source.lastIndexOf('/');
-            String name = image.source.substring(lastIndex + 1);
+            int lastIndex = image.getSource().lastIndexOf('/');
+            String name = image.getSource().substring(lastIndex + 1);
             image_textView.setText(name);
 
             return image_view;

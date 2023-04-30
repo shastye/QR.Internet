@@ -3,7 +3,7 @@ package com.example.qrinternet.Activities.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Image;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.google.gson.Gson;
 
@@ -21,7 +21,7 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
     private int responseCode;
     private JSONObject errorDetails;
     private JSONArray responseArray;
-    private Vector<ImageDetails> imagesFromAPI;
+    private Vector<Image> imagesFromAPI;
 
     @Override
     protected Long doInBackground(String... strings) {
@@ -64,12 +64,12 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
                     Log.e("OOPS", "List is probably empty");
                 }
 
-                imagesFromAPI = new Vector<ImageDetails>(responseArray.length());
+                imagesFromAPI = new Vector<Image>(responseArray.length());
                 for (int i =0; i < responseArray.length(); i++) {
                     Gson gson = new Gson();
                     JSONObject temp = responseArray.getJSONObject(i);
 
-                    ImageDetails image = gson.fromJson(temp.toString(), ImageDetails.class);
+                    Image image = gson.fromJson(temp.toString(), Image.class);
                     imagesFromAPI.add(image);
                 }
             }
@@ -103,7 +103,7 @@ public class ListAllQRCodesFromAPI extends AsyncTask<String, Void, Long> {
     public JSONObject getErrorDetails() {
         return errorDetails;
     }
-    public Vector<ImageDetails> getImagesFromAPI() {
+    public Vector<Image> getImagesFromAPI() {
         return imagesFromAPI;
     }
 }

@@ -16,5 +16,6 @@ public class Tags {
 
     // DATABASE KEYS
     public static final String USER_EMAIL = "email";
-    public static final String USER_PASSWORD = "password";
+    public static final String IMAGE_SOURCE = "filename";
+    public static final String IMAGE_DATA = "data";
 }

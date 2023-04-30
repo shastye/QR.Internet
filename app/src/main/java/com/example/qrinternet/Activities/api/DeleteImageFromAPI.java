@@ -3,7 +3,7 @@ package com.example.qrinternet.Activities.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Image;
 import com.example.qrinternet.Activities.utility.Tags;
 
 import org.json.JSONObject;
@@ -18,9 +18,9 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
 
     private int responseCode;
     private JSONObject errorDetails;
-    private ImageDetails qrCode;
+    private Image qrCode;
 
-    public DeleteImageFromAPI(ImageDetails _qrCode) {
+    public DeleteImageFromAPI(Image _qrCode) {
         qrCode = _qrCode;
     }
 
@@ -30,7 +30,7 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url("https://qrcode3.p.rapidapi.com/images/" + qrCode.id)
+                    .url("https://qrcode3.p.rapidapi.com/images/" + 789)
                     .delete(null)
                     .addHeader("X-RapidAPI-Key", Tags.API_KEY)
                     .addHeader("X-RapidAPI-Host", "qrcode3.p.rapidapi.com")
@@ -56,7 +56,7 @@ public class DeleteImageFromAPI extends AsyncTask<String, Void, Long> {
             // Delete QR Code from device
             if (responseCode == 204) {
                 try {
-                    File file = new File(qrCode.source);
+                    File file = new File(qrCode.getSource());
                     if (!file.delete()) {
                         responseCode = 104;
 

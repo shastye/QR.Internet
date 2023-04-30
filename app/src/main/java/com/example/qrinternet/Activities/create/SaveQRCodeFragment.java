@@ -27,7 +27,17 @@ import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.io.File;
 import java.util.Objects;
@@ -51,7 +61,21 @@ public class SaveQRCodeFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
-        Tags.NUM_SAVED_QRCODES = Methods.CountNumberOfSavedImages(Tags.SAVE_PATH);
+        final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
+        String email = Tags.USER.getEmail();
+        Query query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Tags.NUM_SAVED_QRCODES = (int) snapshot.getCount();
+                } else {
+                    Tags.NUM_SAVED_QRCODES = 0;
+                }
+            }
+        });
 
         ImageView qrCode = (ImageView) root.findViewById(R.id.ViewQRCode_imageView);
         EditText fn_et = (EditText) root.findViewById(R.id.filename_editText);
@@ -82,7 +106,22 @@ public class SaveQRCodeFragment extends Fragment {
                 }
                 String finalFilename = filename;
 
-                if (new File(Tags.SAVE_PATH, finalFilename).exists()) {
+                final boolean[] imageExists = {false};
+                db[0] = FirebaseFirestore.getInstance();
+                DocumentReference image = db[0].collection("users").document(email).collection("images").document(finalFilename);
+                image.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if (snapshot.exists()) {
+                                imageExists[0] = true;
+                            }
+                        }
+                    }
+                });
+
+                if (imageExists[0]) {
                     // TODO: change to actually be able to overwrite.
 
                     DialogFragment df = new StringDialogFragment("The file " + finalFilename + "already exists.\n\n" +
@@ -90,35 +129,22 @@ public class SaveQRCodeFragment extends Fragment {
                     df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
                 }
                 else {
-                    if (Tags.NUM_SAVED_QRCODES <= 5) {
-                        boolean saved = Methods.SaveBitmapAsPNGToDevice(filename, CreateAndSaveViewModel.getBitmap());
-                        if (saved) {
-                            uploadQRcode = new UploadQRCodesToAPI(filename);
-                            uploadQRcode.execute();
-                            try {
-                                uploadQRcode.get();
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    uploadQRcode = new UploadQRCodesToAPI(filename);
+                    uploadQRcode.execute();
+                    try {
+                        uploadQRcode.get();
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                            if (uploadQRcode.getResponseCode() == 200) {
-                                DialogFragment df = new StringDialogFragment("Image saved successfully.");
-                                df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                    if (uploadQRcode.getResponseCode() == 200) {
+                        DialogFragment df = new StringDialogFragment("Image saved successfully.");
+                        df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
 
-                                Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
-                            } else {
-                                DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
-                                errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                            }
-                        } else {
-                            DialogFragment errorDialog = new ErrorCodeDialogFragment(100, null);
-                            errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                        }
+                        Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
                     } else {
-                        DialogFragment df = new StringDialogFragment("Too many save requests.\n\n" +
-                                "Your limit of saved QR Codes is 5 images.\n" +
-                                "Please delete a previously saved image and try again.");
-                        df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                        DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
+                        errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
                 }
             }

@@ -70,7 +70,7 @@ public class SignUpFragment extends Fragment {
 
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     db.collection("users").document(LogInViewModel.username)
-                                            .set(user.getHashMap())
+                                            .set(user)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {

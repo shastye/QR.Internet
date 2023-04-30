@@ -19,7 +19,7 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.api.DeleteImageFromAPI;
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
-import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Image;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
@@ -52,8 +52,8 @@ public class ViewQRCodeFragment extends Fragment {
         ImageView viewSavedQRCode = (ImageView) root.findViewById(R.id.ViewSavedQRCode_imageView);
         viewSavedQRCode.setImageBitmap(ViewAndDeleteViewModel.getBitmapsOfQRCodes().get(ViewAndDeleteViewModel.getPositionOfGrid()));
         TextView viewSavedText = (TextView) root.findViewById(R.id.savedFilename_textView);
-        int lastIndex = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).source.lastIndexOf('/');
-        String name = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).source.substring(lastIndex + 1);
+        int lastIndex = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().lastIndexOf('/');
+        String name = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid()).getSource().substring(lastIndex + 1);
         viewSavedText.setText(name);
 
         Button deleteQRButton = (Button) root.findViewById(R.id.deleteQRCode_button);
@@ -61,7 +61,7 @@ public class ViewQRCodeFragment extends Fragment {
         deleteQRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageDetails qrCode = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid());
+                Image qrCode = ViewAndDeleteViewModel.getImagesFromAPI().get(ViewAndDeleteViewModel.getPositionOfGrid());
                 deleteQRCode = new DeleteImageFromAPI(qrCode);
                 deleteQRCode.execute();
                 try {

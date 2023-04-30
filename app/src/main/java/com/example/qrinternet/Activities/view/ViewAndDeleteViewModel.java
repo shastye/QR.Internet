@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.qrinternet.Activities.utility.ImageDetails;
+import com.example.qrinternet.Activities.utility.Image;
 
 import java.util.Vector;
 
@@ -14,7 +14,7 @@ public class ViewAndDeleteViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    private static Vector<ImageDetails> imagesFromAPI;
+    private static Vector<Image> imagesFromAPI;
     private static Vector<Bitmap> bitmapsOfQRCodes;
     private static int positionOfGrid;
 
@@ -27,7 +27,7 @@ public class ViewAndDeleteViewModel extends ViewModel {
         return mText;
     }
 
-    public static Vector<ImageDetails> getImagesFromAPI() {
+    public static Vector<Image> getImagesFromAPI() {
         return imagesFromAPI;
     }
     public static Vector<Bitmap> getBitmapsOfQRCodes() {
@@ -37,7 +37,7 @@ public class ViewAndDeleteViewModel extends ViewModel {
         return positionOfGrid;
     }
 
-    public static void setImagesFromAPI(Vector<ImageDetails> _imagesFromAPI){
+    public static void setImagesFromAPI(Vector<Image> _imagesFromAPI){
         imagesFromAPI = _imagesFromAPI;
     }
     public static void setBitmapsOfQRCodes(Vector<Bitmap> _bitmapsOfQRCodes) {
