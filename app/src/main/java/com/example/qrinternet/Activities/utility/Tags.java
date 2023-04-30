@@ -9,13 +9,5 @@ public class Tags {
     public static int NUM_SAVED_QRCODES = 0;
     public static String EMAIL = "shastye.7x@gmail.com";
 
-    public static String SAVE_PATH = "/storage/self/primary/Pictures/QRInternet/";
-
     public static FirebaseAuth AUTH;
-    public static FirebaseUser USER;
-
-    // DATABASE KEYS
-    public static final String USER_EMAIL = "email";
-    public static final String IMAGE_SOURCE = "filename";
-    public static final String IMAGE_DATA = "data";
 }
