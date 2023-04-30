@@ -59,9 +59,9 @@ public class ResetPasswordFragment extends Fragment {
         rp_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogInViewModel.username = un_et.getText().toString();
+                LogInViewModel.setUsername(un_et.getText().toString());
 
-                Tags.AUTH.sendPasswordResetEmail(LogInViewModel.username)
+                Tags.AUTH.sendPasswordResetEmail(LogInViewModel.getUsername())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

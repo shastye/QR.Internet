@@ -58,18 +58,18 @@ public class SignUpFragment extends Fragment {
         li_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogInViewModel.username = un_et.getText().toString();
-                LogInViewModel.password = pw_et.getText().toString();
+                LogInViewModel.setUsername(un_et.getText().toString());
+                LogInViewModel.setPassword(pw_et.getText().toString());
 
-                Tags.AUTH.createUserWithEmailAndPassword(LogInViewModel.username, LogInViewModel.password)
+                Tags.AUTH.createUserWithEmailAndPassword(LogInViewModel.getUsername(), LogInViewModel.getPassword())
                         .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    User user = new User(LogInViewModel.username);
+                                    User user = new User(LogInViewModel.getUsername());
 
                                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                    db.collection("users").document(LogInViewModel.username)
+                                    db.collection("users").document(LogInViewModel.getUsername())
                                             .set(user)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override

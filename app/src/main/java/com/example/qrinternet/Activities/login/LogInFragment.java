@@ -52,10 +52,10 @@ public class LogInFragment extends Fragment {
         li_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogInViewModel.username = un_et.getText().toString();
-                LogInViewModel.password = pw_et.getText().toString();
+                LogInViewModel.setUsername(un_et.getText().toString());
+                LogInViewModel.setPassword(pw_et.getText().toString());
 
-                Tags.AUTH.signInWithEmailAndPassword(LogInViewModel.username, LogInViewModel.password)
+                Tags.AUTH.signInWithEmailAndPassword(LogInViewModel.getUsername(), LogInViewModel.getPassword())
                         .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
