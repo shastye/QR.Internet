@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
+import com.example.qrinternet.Activities.utility.Image;
 import com.example.qrinternet.Activities.utility.Methods;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
@@ -28,8 +29,11 @@ import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSaveQrCodeBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
@@ -38,6 +42,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Objects;
@@ -62,7 +68,7 @@ public class SaveQRCodeFragment extends Fragment {
         // ADDITIONS ADDED BETWEEN COMMENTS
 
         final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
-        String email = Tags.USER.getEmail();
+        String email = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
         Query query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
         AggregateQuery countQuery = query.count();
         countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
@@ -129,23 +135,33 @@ public class SaveQRCodeFragment extends Fragment {
                     df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
                 }
                 else {
-                    uploadQRcode = new UploadQRCodesToAPI(filename);
-                    uploadQRcode.execute();
-                    try {
-                        uploadQRcode.get();
-                    } catch (ExecutionException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Image qrCode = new Image(finalFilename, CreateAndSaveViewModel.getBinaryData());
+                    image.set(qrCode)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    DialogFragment df = new StringDialogFragment("Image saved successfully.");
+                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
 
-                    if (uploadQRcode.getResponseCode() == 200) {
-                        DialogFragment df = new StringDialogFragment("Image saved successfully.");
-                        df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    String json = "{\"detail\":\"" + e.getMessage() + "\"}";
+                                    JSONObject errorDetails = null;
+                                    try {
+                                        errorDetails = new JSONObject(json);
+                                        Log.e("JSON", errorDetails.toString());
+                                    } catch (Throwable t) {
+                                        Log.e("JSONObject", "Could not parse JSON");
+                                    }
 
-                        Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
-                    } else {
-                        DialogFragment errorDialog = new ErrorCodeDialogFragment(uploadQRcode.getResponseCode(), uploadQRcode.getErrorDetails());
-                        errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                    }
+                                    DialogFragment errorDialog = new ErrorCodeDialogFragment(100, errorDetails);
+                                    errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                                }
+                            });
                 }
             }
         });

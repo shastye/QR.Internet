@@ -1,5 +1,14 @@
 package com.example.qrinternet.Activities.utility;
 
+import com.google.firebase.firestore.Blob;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class Image {
     private String source;
     private byte[] binaryData;
@@ -12,14 +21,26 @@ public class Image {
     public String getSource() {
         return source;
     }
-    public byte[] getBinaryData() {
-        return binaryData;
+    public List<Integer> getBinaryData() {
+        Byte[] temp_b = ArrayUtils.toObject(binaryData);
+        List<Integer> temp_i = new ArrayList<>();
+        for (Byte b : temp_b) {
+            temp_i.add(b == null ? null : b.intValue());
+        }
+        return temp_i;
     }
 
     public void setSource(String _source) {
         source = _source;
     }
-    public void setBinaryData(byte[] _binaryData) {
-        binaryData = _binaryData;
+    public void setBinaryData(List<Integer> _binaryData) {
+        int size = _binaryData.size();
+        byte[] temp = new byte[size];
+
+        for (int i = 0; i < size; i++) {
+            temp[i] = _binaryData.get(i).byteValue();
+        }
+
+        binaryData = temp;
     }
 }
