@@ -55,7 +55,7 @@ public class ErrorCodeDialogFragment extends DialogFragment {
 
         switch(code) {
             case 100:
-                message = "Image could not be saved\n\nTry renaming the image.\n\n";
+                message = "Image could not be saved\n\n";
                 break;
             case 102:
                 message = "Image could not be decoded\n\n";

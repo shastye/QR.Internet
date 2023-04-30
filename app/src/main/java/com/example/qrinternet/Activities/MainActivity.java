@@ -50,9 +50,8 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(binding.getRoot().getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 77);
         }
-        if (ContextCompat.checkSelfPermission(binding.getRoot().getContext(), Manifest.permission.MANAGE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 777);
-        }
+
+
     }
 
     @Override

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "831742140021",
+    "project_id": "qr-internet-7x",
+    "storage_bucket": "qr-internet-7x.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831742140021:android:8034ab14aa17833e10223c",
+        "android_client_info": {
+          "package_name": "com.example.qrinternet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831742140021-sh82jommd82col4bc6uida09l44udme3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY9hQkAGK2mt72O1LsaQNtEoArFuPKobM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831742140021-sh82jommd82col4bc6uida09l44udme3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

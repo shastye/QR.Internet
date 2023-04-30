@@ -1,6 +1,8 @@
 package com.example.qrinternet.Activities.create;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,9 +80,10 @@ public class SaveQRCodeFragment extends Fragment {
                     filename = filename.subSequence(0, index).toString();
                     filename = filename + ".png";
                 }
+                String finalFilename = filename;
 
-                if (new File(Tags.SAVE_PATH, filename).exists()) {
-                    DialogFragment overwriteDialog = new OverwriteExistingImageDialogFragment(filename);
+                if (new File(Tags.SAVE_PATH, finalFilename).exists()) {
+                    DialogFragment overwriteDialog = new OverwriteExistingImageDialogFragment(finalFilename);
                     overwriteDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
                 }
                 else {

@@ -17,8 +17,6 @@ import androidx.navigation.Navigation;
 import com.example.qrinternet.Activities.dialogs.AccountAlreadyExistsDialogFragment;
 import com.example.qrinternet.Activities.dialogs.AccountCreatedDialogFragment;
 import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
-import com.example.qrinternet.Activities.roomsupplies.AppDatabase;
-import com.example.qrinternet.Activities.roomsupplies.User;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentSignupBinding;
 
@@ -54,33 +52,12 @@ public class SignUpFragment extends Fragment {
                 username = un_et.getText().toString();
                 password = pw_et.getText().toString();
 
-                final User[] temp = new User[1];
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        temp[0] = AppDatabase.getInstance(root.getContext()).userDao().getUser(username);
-                    }
-                });
-                t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                Object temp = new Object();
 
-                if (temp[0] == null) {
-                    t = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            AppDatabase.getInstance(root.getContext()).userDao().insertUser(new User(username, password));
-                        }
-                    });
-                    t.start();
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                if (temp == null) {
+
+
+
 
                     DialogFragment savedImage = new AccountCreatedDialogFragment();
                     savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Created Message");

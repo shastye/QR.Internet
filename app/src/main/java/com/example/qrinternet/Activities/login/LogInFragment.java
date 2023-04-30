@@ -18,8 +18,6 @@ import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
 import com.example.qrinternet.Activities.dialogs.ImageDeletedDialogFragment;
 import com.example.qrinternet.Activities.dialogs.IncorrectPasswordDialogFragment;
 import com.example.qrinternet.Activities.dialogs.LogInSuccessfulDialogFragment;
-import com.example.qrinternet.Activities.roomsupplies.AppDatabase;
-import com.example.qrinternet.Activities.roomsupplies.User;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentLoginBinding;
 
@@ -56,43 +54,22 @@ public class LogInFragment extends Fragment {
                 username = un_et.getText().toString();
                 password = pw_et.getText().toString();
 
-                final User[] temp = new User[1];
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        temp[0] = AppDatabase.getInstance(root.getContext()).userDao().getUser(username);
-                    }
-                });
-                t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                // TODO: temp is current user by username
+                Object temp = new Object();
 
-                if (temp[0] != null) {
-                    if (password.equals(temp[0].password)) {
-                        t = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                LogInViewModel.setImages(AppDatabase.getInstance(root.getContext()).imageDao().findImagesFromUser(username));
-                                LogInViewModel.setCurrentUser(temp[0]);
-                            }
-                        });
-                        t.start();
-                        try {
-                            t.join();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                if (temp != null) {
+                    //if (password.equals(temp.password)) {
+
+
+
 
                         DialogFragment savedImage = new LogInSuccessfulDialogFragment();
                         savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Log in successful Message");
-                    }
-                    else {
-                        DialogFragment savedImage = new IncorrectPasswordDialogFragment();
-                        savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Incorrect Password Message");
-                    }
+                    //}
+                    //else {
+                        //DialogFragment savedImage = new IncorrectPasswordDialogFragment();
+                        //savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Incorrect Password Message");
+                    //}
                 }
                 else {
                     DialogFragment savedImage = new AccountInvalidDialogFragment();
