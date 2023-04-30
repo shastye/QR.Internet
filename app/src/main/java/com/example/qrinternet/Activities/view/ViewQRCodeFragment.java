@@ -1,6 +1,7 @@
 package com.example.qrinternet.Activities.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.qrinternet.Activities.api.DeleteImageFromAPI;
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
 import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Image;
@@ -24,7 +24,14 @@ import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentViewQrCodeBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONObject;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -32,8 +39,6 @@ import java.util.concurrent.ExecutionException;
 public class ViewQRCodeFragment extends Fragment {
     private FragmentViewQrCodeBinding binding;
     ViewAndDeleteViewModel viewAndDeleteViewModel;
-
-    DeleteImageFromAPI deleteQRCode;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +54,10 @@ public class ViewQRCodeFragment extends Fragment {
 
         // ADDITIONS ADDED BETWEEN COMMENTS
 
+        final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
+        String email = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
+        CollectionReference query = db[0].collection("users").document(Objects.requireNonNull(email)).collection("images");
+
         ImageView viewSavedQRCode = (ImageView) root.findViewById(R.id.ViewSavedQRCode_imageView);
         viewSavedQRCode.setImageBitmap(ViewAndDeleteViewModel.getBitmaps().get(ViewAndDeleteViewModel.getPositionOfGrid()));
         TextView viewSavedText = (TextView) root.findViewById(R.id.savedFilename_textView);
@@ -62,25 +71,34 @@ public class ViewQRCodeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Image qrCode = ViewAndDeleteViewModel.getImages().get(ViewAndDeleteViewModel.getPositionOfGrid());
-                deleteQRCode = new DeleteImageFromAPI(qrCode);
-                deleteQRCode.execute();
-                try {
-                    deleteQRCode.get();
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                if (deleteQRCode.getResponseCode() == 204) {
-                    DialogFragment df = new StringDialogFragment("Image deleted successfully.");
-                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Deleted Message");
+                query.document(qrCode.getSource())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                DialogFragment df = new StringDialogFragment("Image deleted successfully.");
+                                df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Deleted Message");
 
-                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
+                                Navigation.findNavController(root).navigate(R.id.action_navigation_viewSaved_to_navigation_notifications);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                String json = "{\"detail\":\"" + e.getMessage() + "\"}";
+                                JSONObject errorDetails = null;
+                                try {
+                                    errorDetails = new JSONObject(json);
+                                    Log.e("JSON", errorDetails.toString());
+                                } catch (Throwable t) {
+                                    Log.e("JSONObject", "Could not parse JSON");
+                                }
 
-                    Navigation.findNavController(root).navigate(R.id.action_navigation_viewSaved_to_navigation_notifications);
-                } else {
-                    DialogFragment errorDialog = new ErrorCodeDialogFragment(deleteQRCode.getResponseCode(), deleteQRCode.getErrorDetails());
-                    errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                }
+                                DialogFragment df = new ErrorCodeDialogFragment(104, errorDetails);
+                                df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                            }
+                        });
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.qrinternet.Activities.utility;
 
 import com.google.firebase.firestore.Blob;
+import com.google.firebase.firestore.Exclude;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -33,6 +34,8 @@ public class Image {
         }
         return temp_i;
     }
+
+    @Exclude
     public byte[] getRawData() {
         return binaryData;
     }
