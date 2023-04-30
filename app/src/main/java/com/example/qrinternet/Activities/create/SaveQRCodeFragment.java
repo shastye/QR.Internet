@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.dialogs.OverwriteImageDialogFragment;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Image;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.AggregateQuery;
@@ -42,6 +44,7 @@ import com.google.firebase.firestore.Query;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Objects;
 
 public class SaveQRCodeFragment extends Fragment {
@@ -105,57 +108,49 @@ public class SaveQRCodeFragment extends Fragment {
                 }
                 String finalFilename = filename;
 
-                final boolean[] imageExists = {false};
                 db[0] = FirebaseFirestore.getInstance();
                 DocumentReference image = query.document(finalFilename);
                 image.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            Image qrCode = new Image(finalFilename, CreateAndSaveViewModel.getBinaryData());
+
                             DocumentSnapshot snapshot = task.getResult();
                             if (snapshot.exists()) {
-                                imageExists[0] = true;
+                                DialogFragment df = new OverwriteImageDialogFragment(finalFilename, qrCode);
+                                df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
                             }
+                            else {
+                                image.set(qrCode)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            DialogFragment df = new StringDialogFragment("Image saved successfully.");
+                                            df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            String json = "{\"detail\":\"" + e.getMessage() + "\"}";
+                                            JSONObject errorDetails = null;
+                                            try {
+                                                errorDetails = new JSONObject(json);
+                                                Log.e("JSON", errorDetails.toString());
+                                            } catch (Throwable t) {
+                                                Log.e("JSONObject", "Could not parse JSON");
+                                            }
+
+                                            DialogFragment errorDialog = new ErrorCodeDialogFragment(100, errorDetails);
+                                            errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                                        }
+                                    });
+                            }
+
                         }
                     }
                 });
-
-                if (imageExists[0]) {
-                    // TODO: change to actually be able to overwrite.
-
-                    DialogFragment df = new StringDialogFragment("The file " + finalFilename + "already exists.\n\n" +
-                            "Please rename your image or delete the already saved one.");
-                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
-                }
-                else {
-                    Image qrCode = new Image(finalFilename, CreateAndSaveViewModel.getBinaryData());
-                    image.set(qrCode)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    DialogFragment df = new StringDialogFragment("Image saved successfully.");
-                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
-
-                                    Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    String json = "{\"detail\":\"" + e.getMessage() + "\"}";
-                                    JSONObject errorDetails = null;
-                                    try {
-                                        errorDetails = new JSONObject(json);
-                                        Log.e("JSON", errorDetails.toString());
-                                    } catch (Throwable t) {
-                                        Log.e("JSONObject", "Could not parse JSON");
-                                    }
-
-                                    DialogFragment errorDialog = new ErrorCodeDialogFragment(100, errorDetails);
-                                    errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
-                                }
-                            });
-                }
             }
         });
 
