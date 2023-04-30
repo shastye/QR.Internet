@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,9 +19,14 @@ import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
 import com.example.qrinternet.Activities.dialogs.ImageDeletedDialogFragment;
 import com.example.qrinternet.Activities.dialogs.IncorrectPasswordDialogFragment;
 import com.example.qrinternet.Activities.dialogs.LogInSuccessfulDialogFragment;
+import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentLoginBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -55,27 +61,24 @@ public class LogInFragment extends Fragment {
                 username = un_et.getText().toString();
                 password = pw_et.getText().toString();
 
-                // TODO: temp is current user by username
-                Object temp = new Object();
+                Tags.AUTH.signInWithEmailAndPassword(username, password)
+                        .addOnCompleteListener(Objects.requireNonNull(getActivity()), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Tags.USER = Tags.AUTH.getCurrentUser();
 
-                if (temp != null) {
-                    //if (password.equals(temp.password)) {
+                                    DialogFragment savedImage = new LogInSuccessfulDialogFragment();
+                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Log in successful Message");
 
-
-
-
-                        DialogFragment savedImage = new LogInSuccessfulDialogFragment();
-                        savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Log in successful Message");
-                    //}
-                    //else {
-                        //DialogFragment savedImage = new IncorrectPasswordDialogFragment();
-                        //savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Incorrect Password Message");
-                    //}
-                }
-                else {
-                    DialogFragment savedImage = new AccountInvalidDialogFragment();
-                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Invalid Message");
-                }
+                                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_login_to_navigation_create);
+                                } else {
+                                    DialogFragment savedImage = new AccountInvalidDialogFragment();
+                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Invalid Message");
+                                }
+                            }
+                        });
             }
         });
 
@@ -107,5 +110,12 @@ public class LogInFragment extends Fragment {
 
         BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
         navBar.setVisibility(View.INVISIBLE);
+
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).hide();
+
+        FirebaseUser currentUser = Tags.AUTH.getCurrentUser();
+        if (currentUser != null){
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_login_to_navigation_create);
+        }
     }
 }

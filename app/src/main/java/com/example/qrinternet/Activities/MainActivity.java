@@ -18,6 +18,7 @@ import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 77);
         }
 
-
+        Tags.AUTH = FirebaseAuth.getInstance();
     }
 
     @Override

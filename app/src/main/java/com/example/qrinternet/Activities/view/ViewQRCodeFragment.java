@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -97,6 +98,8 @@ public class ViewQRCodeFragment extends Fragment {
 
         BottomNavigationView navBar = Objects.requireNonNull(getActivity()).findViewById(R.id.nav_view);
         navBar.setVisibility(View.VISIBLE);
+
+        Objects.requireNonNull(((AppCompatActivity) getActivity()).getSupportActionBar()).show();
     }
 
     @Override
