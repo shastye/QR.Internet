@@ -8,7 +8,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-public class ImageSavedDialogFragment extends DialogFragment {
+public class StringDialogFragment extends DialogFragment {
+
+    private String message;
+
+    public StringDialogFragment(String _message) {
+        message = _message;
+    }
 
     @NonNull
     @Override
@@ -18,10 +24,9 @@ public class ImageSavedDialogFragment extends DialogFragment {
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {}
         });
-        builder.setMessage("Image saved successfully.");
+        builder.setMessage(message);
 
         // Create the AlertDialog object and return it
         return builder.create();
     }
 }
-

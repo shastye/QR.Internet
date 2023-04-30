@@ -18,7 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.api.DeleteImageFromAPI;
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.dialogs.ImageDeletedDialogFragment;
+import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.ImageDetails;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
@@ -71,8 +71,8 @@ public class ViewQRCodeFragment extends Fragment {
                 }
 
                 if (deleteQRCode.getResponseCode() == 204) {
-                    DialogFragment savedImage = new ImageDeletedDialogFragment();
-                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Deleted Message");
+                    DialogFragment df = new StringDialogFragment("Image deleted successfully.");
+                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Deleted Message");
 
                     Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES - 1;
 

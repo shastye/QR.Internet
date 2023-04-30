@@ -15,10 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
-import com.example.qrinternet.Activities.dialogs.ImageDeletedDialogFragment;
-import com.example.qrinternet.Activities.dialogs.IncorrectPasswordDialogFragment;
-import com.example.qrinternet.Activities.dialogs.LogInSuccessfulDialogFragment;
+import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.R;
 import com.example.qrinternet.databinding.FragmentLoginBinding;
@@ -69,13 +66,13 @@ public class LogInFragment extends Fragment {
                                     // Sign in success, update UI with the signed-in user's information
                                     Tags.USER = Tags.AUTH.getCurrentUser();
 
-                                    DialogFragment savedImage = new LogInSuccessfulDialogFragment();
-                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Log in successful Message");
+                                    DialogFragment df = new StringDialogFragment("Logged in successfully.");
+                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Log in successful Message");
 
                                     Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_login_to_navigation_create);
                                 } else {
-                                    DialogFragment savedImage = new AccountInvalidDialogFragment();
-                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Invalid Message");
+                                    DialogFragment df = new StringDialogFragment("Log in attempt failed.\n\nCheck the email and password provided\nand try again.");
+                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Invalid Message");
                                 }
                             }
                         });

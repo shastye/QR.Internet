@@ -1,6 +1,7 @@
 package com.example.qrinternet.Activities.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.qrinternet.Activities.dialogs.AccountAlreadyExistsDialogFragment;
-import com.example.qrinternet.Activities.dialogs.AccountCreatedDialogFragment;
-import com.example.qrinternet.Activities.dialogs.AccountInvalidDialogFragment;
+import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
+import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.utility.User;
 import com.example.qrinternet.R;
@@ -28,8 +28,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -57,8 +58,6 @@ public class SignUpFragment extends Fragment {
         Button li_b = (Button) root.findViewById(R.id.signup_button);
         TextView su_cet = (TextView) root.findViewById(R.id.changeToLogIn_clickableTextView);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         li_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +70,15 @@ public class SignUpFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     User user = new User(username, password);
+
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                                     db.collection("users").document(username)
                                             .set(user.getHashMap())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    DialogFragment savedImage = new AccountCreatedDialogFragment();
-                                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Created Message");
+                                                    DialogFragment df = new StringDialogFragment("Account created successfully.");
+                                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Created Message");
 
                                                     Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_signup_to_navigation_login);
                                                 }
@@ -88,16 +89,22 @@ public class SignUpFragment extends Fragment {
                                                     // TODO: CREATE CORRECT DIALOG
                                                     //      new database entry not made
 
-                                                    DialogFragment savedImage = new AccountInvalidDialogFragment();
-                                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Exists Message");
+                                                    String json = "{\"detail\":\"" + e.getMessage() + "\"}";
+                                                    JSONObject errorDetails = null;
+                                                    try {
+                                                        errorDetails = new JSONObject(json);
+                                                        Log.e("JSON", errorDetails.toString());
+                                                    } catch (Throwable t) {
+                                                        Log.e("JSONObject", "Could not parse JSON");
+                                                    }
+
+                                                    DialogFragment df = new ErrorCodeDialogFragment(0, errorDetails);
+                                                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Exists Message");
                                                 }
                                             });
                                 } else {
                                     // TODO: CREATE CORRECT DIALOG
                                     //      new auth not made
-
-                                    DialogFragment savedImage = new AccountAlreadyExistsDialogFragment();
-                                    savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Account Exists Message");
                                 }
                             }
                         });

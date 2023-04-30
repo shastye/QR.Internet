@@ -20,10 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.qrinternet.Activities.dialogs.ErrorCodeDialogFragment;
-import com.example.qrinternet.Activities.dialogs.ImageSavedDialogFragment;
+import com.example.qrinternet.Activities.dialogs.StringDialogFragment;
 import com.example.qrinternet.Activities.utility.Methods;
-import com.example.qrinternet.Activities.dialogs.OverwriteExistingImageDialogFragment;
-import com.example.qrinternet.Activities.dialogs.SavedLimitReachedDialogFragment;
 import com.example.qrinternet.Activities.dialogs.SendEmailDialogFragment;
 import com.example.qrinternet.Activities.utility.Tags;
 import com.example.qrinternet.Activities.api.UploadQRCodesToAPI;
@@ -85,8 +83,11 @@ public class SaveQRCodeFragment extends Fragment {
                 String finalFilename = filename;
 
                 if (new File(Tags.SAVE_PATH, finalFilename).exists()) {
-                    DialogFragment overwriteDialog = new OverwriteExistingImageDialogFragment(finalFilename);
-                    overwriteDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
+                    // TODO: change to actually be able to overwrite.
+
+                    DialogFragment df = new StringDialogFragment("The file " + finalFilename + "already exists.\n\n" +
+                            "Please rename your image or delete the already saved one.");
+                    df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Overwrite Message");
                 }
                 else {
                     if (Tags.NUM_SAVED_QRCODES <= 5) {
@@ -101,8 +102,8 @@ public class SaveQRCodeFragment extends Fragment {
                             }
 
                             if (uploadQRcode.getResponseCode() == 200) {
-                                DialogFragment savedImage = new ImageSavedDialogFragment();
-                                savedImage.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
+                                DialogFragment df = new StringDialogFragment("Image saved successfully.");
+                                df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Image Saved Message");
 
                                 Tags.NUM_SAVED_QRCODES = Tags.NUM_SAVED_QRCODES + 1;
                             } else {
@@ -114,8 +115,10 @@ public class SaveQRCodeFragment extends Fragment {
                             errorDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                         }
                     } else {
-                        DialogFragment saveLimitDialog = new SavedLimitReachedDialogFragment();
-                        saveLimitDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
+                        DialogFragment df = new StringDialogFragment("Too many save requests.\n\n" +
+                                "Your limit of saved QR Codes is 5 images.\n" +
+                                "Please delete a previously saved image and try again.");
+                        df.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Error Message");
                     }
                 }
             }
